@@ -2,7 +2,7 @@ export const MAX_SPEED = 60, RACE_LENGTH = 4800;
 export const CHECKPOINTS = [1600, 3200];
 export function roadCenter(z) { return Math.sin(z / 460) * 600 + Math.sin(z / 900) * 850; }
 export function createRace(random = Math.random) {
-  return { phase: 'ready', resumePhase: 'racing', countdown: 3, speed: 0, x: 0,
+  return { phase: 'ready', resumePhase: 'racing', countdown: 1, speed: 0, x: 0,
     distance: 0, timeLeft: 65, elapsed: 0, sector: 0, overtakes: 0,
     nitro: 0, cooldown: 0, hitCooldown: 0, flash: 0, message: '', messageTime: 0,
     traffic: Array.from({ length: 12 }, (_, i) => ({ z: 280 + i * 220,
@@ -28,7 +28,7 @@ export function stepRace(s, input, dt, random = Math.random) {
   if (s.nitro > 0) { s.nitro = Math.max(0, s.nitro - dt); if (!s.nitro) s.cooldown = 10; }
   else s.cooldown = Math.max(0, s.cooldown - dt);
   const boost = s.nitro > 0;
-  const accel = input.down ? -65 : boost ? 42 : input.up ? 15 : -10;
+  const accel = input.down ? -65 : boost ? 90 : input.up ? 45 : -10;
   s.speed = Math.max(0, Math.min(boost ? MAX_SPEED * 1.75 : Math.max(MAX_SPEED, s.speed - 24 * dt), s.speed + accel * dt));
   const steering = Number(!!input.right) - Number(!!input.left);
   s.x += steering * (0.35 + s.speed / MAX_SPEED * 1.25) * dt;
