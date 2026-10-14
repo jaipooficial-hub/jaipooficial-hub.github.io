@@ -6224,7 +6224,7 @@
               </div>
             </div>
 
-            <!-- Destacados: PONG y C&C Red Alert -->
+            <!-- Destacados: PONG y C&C Yuri's Revenge -->
             <div class="jfy-featured-container">
               <!-- Tarjeta PONG -->
               <div class="jfy-featured-card" onclick="launchPongGame()" title="Haz clic aquí para jugar a PONG" style="flex-direction: row;">
@@ -6254,27 +6254,27 @@
                 </div>
               </div>
 
-              <!-- Tarjeta C&C Red Alert 2 -->
-              <div class="jfy-featured-card" onclick="launchCnCGame(event)" title="Haz clic aquí para jugar Command & Conquer: Red Alert 2" style="flex-direction: row; border-color: #ff3333; box-shadow: 0 0 16px rgba(255, 51, 51, 0.25), inset 0 0 10px rgba(255, 51, 51, 0.1);">
+              <!-- Tarjeta C&C Yuri's Revenge -->
+              <div class="jfy-featured-card" id="yuri-game-card" role="link" tabindex="0" onclick="launchCnCGame(event)" onkeydown="if (event.target === this && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); launchCnCGame(event); }" title="Abrir Command &amp; Conquer: Yuri's Revenge en Retro Online" style="flex-direction: row; border-color: #cc66ff; box-shadow: 0 0 16px rgba(204, 102, 255, 0.25), inset 0 0 10px rgba(204, 102, 255, 0.1);">
                 <div class="jfy-pong-left-col">
                   <!-- Ícono estático/texto para C&C -->
-                  <div class="jfy-pong-icon-display" style="border-color: #ff3333; display: flex; align-items: center; justify-content: center; background: #330000; color: #ff3333; font-family: Impact, sans-serif; font-size: 20px;">
-                    C&C
+                  <div class="jfy-pong-icon-display" aria-label="Yuri's Revenge" style="border-color: #cc66ff; display: flex; align-items: center; justify-content: center; background: #220033; color: #cc66ff; font-family: Impact, sans-serif; font-size: 20px;">
+                    YURI
                   </div>
 
                   <div class="jfy-pong-info">
-                    <div class="jfy-pong-title" style="font-size: 18px; color: #ff3333; text-shadow: 0 0 6px rgba(255, 51, 51, 0.8);">
-                      <span>RED ALERT 2</span>
-                      <span class="jfy-pong-badge" style="background: #990000;">EXTERNO</span>
+                    <div class="jfy-pong-title" style="font-size: 18px; color: #cc66ff; text-shadow: 0 0 6px rgba(204, 102, 255, 0.8);">
+                      <span>YURI'S REVENGE</span>
+                      <span class="jfy-pong-badge" style="background: #660099;">EXTERNO</span>
                     </div>
                     <div class="jfy-pong-desc" style="color: #ccc;">
-                      ChronoDivide &bull; <span style="color: #ffaa00; font-weight: bold;">Asegúrate de estar en PC para jugar este juego!</span>
+                      Command &amp; Conquer &bull; Retro Online &bull; Abre en una nueva pestaña.
                     </div>
                   </div>
                 </div>
                 <div>
-                  <button class="jfy-play-btn" type="button" onclick="event.stopPropagation(); launchCnCGame(event);" style="background: #660000; border-color: #ff6666 #330000 #330000 #ff6666;">
-                    ▶ JUGAR
+                  <button class="jfy-play-btn" type="button" onclick="launchCnCGame(event);" title="Jugar Yuri's Revenge en Retro Online" style="background: #440066; border-color: #dd99ff #220033 #220033 #dd99ff;">
+                    ▶ JUGAR YURI
                   </button>
                 </div>
               </div>
@@ -6442,7 +6442,7 @@
             </div>
           </div>
 
-          <!-- VISTA C&C: Command & Conquer Red Alert (ChronoDivide) -->
+          <!-- VISTA C&C: Command & Conquer Yuri's Revenge (Retro Online) -->
           <div id="net-game-cnc-view" style="display: none; flex-direction: column; width: 100%; height: 100%; background: #000;">
             <div class="pinball-top-toolbar">
               <div class="pinball-nav-row">
@@ -6451,13 +6451,13 @@
                 </button>
 
                 <div class="pinball-title-badge">
-                  <span>💥 Command & Conquer: Red Alert</span>
+                  <span>💥 Command &amp; Conquer: Yuri's Revenge</span>
                 </div>
 
                 <div class="pinball-engine-switch">
                   <div class="pinball-server-badge">
                     <span class="pinball-server-dot">●</span>
-                    <span>ChronoDivide Engine</span>
+                    <span>Retro Online</span>
                   </div>
                 </div>
               </div>
@@ -6465,14 +6465,14 @@
 
             <div class="pinball-frame-container" id="cnc-frame-container" style="flex: 1; display: flex; flex-direction: column;">
               <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px;">
-                <div style="font-size: 48px; margin-bottom: 20px; filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));">🚫</div>
-                <h2 style="font-family: 'Win95', sans-serif; margin-bottom: 15px; color: #ff5555; text-shadow: 1px 1px 2px black;">Conexión Bloqueada por el Servidor</h2>
+                <div style="font-size: 48px; margin-bottom: 20px; filter: drop-shadow(0 0 8px rgba(204, 102, 255, 0.6));">💥</div>
+                <h2 style="font-family: 'Win95', sans-serif; margin-bottom: 15px; color: #cc66ff; text-shadow: 1px 1px 2px black;">Yuri's Revenge</h2>
                 <p style="font-family: 'Win95', sans-serif; font-size: 15px; max-width: 500px; margin-bottom: 30px; line-height: 1.5; color: #e0e0e0; text-shadow: 1px 1px 1px black;">
-                  Por motivos de seguridad, el servidor de <strong>ChronoDivide</strong> no permite que el juego sea incrustado en otras páginas.<br><br>
-                  Para jugar Command & Conquer: Red Alert, debes abrirlo en una ventana nueva.
+                  Juega <strong>Command &amp; Conquer: Yuri's Revenge</strong> en Retro Online.<br><br>
+                  Abre el juego en una nueva pestaña para comenzar.
                 </p>
-                <button class="win-button-standard" onclick="window.open('https://game.chronodivide.com/', '_blank')" style="font-size: 14px; padding: 12px 24px; font-weight: bold;">
-                  🚀 ABRIR RED ALERT EN NUEVA PESTAÑA
+                <button class="win-button-standard" onclick="launchCnCGame(event)" style="font-size: 14px; padding: 12px 24px; font-weight: bold;">
+                  🚀 ABRIR YURI'S REVENGE EN NUEVA PESTAÑA
                 </button>
               </div>
             </div>
@@ -10735,15 +10735,35 @@
         }, 120);
       };
 
-      const CNC_URL = 'https://game.chronodivide.com/';
+      const CNC_URL = 'https://retroonline.net/Windows/Command%20%26%20Conquer%3A%20Yuri%27s%20Revenge';
 
       window.launchCnCGame = function (e) {
         if (e) {
           e.stopPropagation();
         }
-        alert('Asegúrate de estar en PC para jugar este juego!');
-        window.open(CNC_URL, '_blank');
+        window.open(CNC_URL, '_blank', 'noopener,noreferrer');
       };
+
+      // Los toques abren el enlace una sola vez; deslizar el catálogo no lo activa.
+      let yuriTouchStart = null;
+      const yuriGameCard = document.getElementById('yuri-game-card');
+      if (yuriGameCard) {
+        yuriGameCard.addEventListener('touchstart', function (e) {
+          yuriTouchStart = e.touches.length === 1
+            ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+            : null;
+        }, { passive: true });
+        yuriGameCard.addEventListener('touchend', function (e) {
+          const touch = e.changedTouches[0];
+          const start = yuriTouchStart;
+          yuriTouchStart = null;
+          if (!start || !touch || e.touches.length) return;
+          if (Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 10) return;
+          e.preventDefault();
+          launchCnCGame(e);
+        }, { passive: false });
+        yuriGameCard.addEventListener('touchcancel', function () { yuriTouchStart = null; });
+      }
 
       window.reloadCnCGame = function () {
         if (!cncGameIframe) return;
