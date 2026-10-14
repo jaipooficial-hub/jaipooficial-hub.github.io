@@ -3873,9 +3873,9 @@
       align-items: center;
       position: relative;
       background: #000000;
-      border: 2px solid #333333;
-      border-radius: 3px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+      border: 4px solid #c0c0c0;
+      border-radius: 0;
+      box-shadow: inset 2px 2px #fff, inset -2px -2px #404040, 2px 2px #000;
       margin-bottom: 6px;
       contain: paint;
       transform: translateZ(0);
@@ -3883,7 +3883,7 @@
 
     #bomberman-game {
       display: block;
-      background: #228b22;
+      background: #388838;
       width: 100%;
       max-width: 520px;
       height: auto;
@@ -3892,6 +3892,66 @@
       image-rendering: pixelated;
       image-rendering: crisp-edges;
       transform: translateZ(0);
+    }
+
+    #net-game-bomberman-view .pong-top-toolbar {
+      max-width: 520px;
+      background: #181828;
+      border: 2px solid #808080;
+    }
+
+    #net-game-bomberman-view .pong-nav-row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #net-game-bomberman-view .pong-scoreboard {
+      flex-wrap: wrap;
+      justify-content: center;
+      white-space: normal;
+      gap: 4px;
+      width: 100%;
+      font-family: 'VT323', 'Courier New', monospace;
+      font-size: 18px;
+      border-radius: 0;
+      box-shadow: none;
+      text-shadow: none;
+    }
+
+    #net-game-bomberman-view .oldweb-ctrl-header {
+      background: #000080;
+      letter-spacing: 0;
+    }
+
+    .bomber-pixel-bomb {
+      display: inline-block;
+      width: 20px;
+      height: 16px;
+      margin: 8px 4px 4px;
+      background: #181818;
+      box-shadow: -4px 0 #181818, 4px 0 #181818, 0 -4px #181818, 0 4px #181818;
+      position: relative;
+    }
+
+    .bomber-pixel-bomb::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      right: 0;
+      width: 4px;
+      height: 8px;
+      background: #b87828;
+      box-shadow: 4px -4px #e8b828;
+    }
+
+    .bomber-pixel-bomb::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 8px;
+      height: 4px;
+      background: #b8b8b8;
     }
 
     /* ==========================================================
@@ -6360,7 +6420,7 @@
                   <span style="color: #00ff66;">BOMBERMAN</span>
                 </div>
                 <div class="jfy-game-card-desc">
-                  Clásico arcade de laberintos y bombas. Destruye bloques suaves y ábrete paso.
+                  Arcade de 8 bits: sprites pixelados, laberintos, bombas y poderes clásicos.
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
                   <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
@@ -6598,7 +6658,7 @@
             </div>
           </div>
 
-          <!-- VISTA 6: Juego Bomberman (HTML5 Canvas Arcade con Movimiento Libre y Game Boy) -->
+          <!-- VISTA 6: Bomberman 8-bit, sprites de 16 píxeles y controles PC/táctiles -->
           <div id="net-game-bomberman-view">
             <div class="pong-top-toolbar">
               <div class="pong-nav-row">
@@ -6606,17 +6666,17 @@
                   ⬅ Volver a JuegosFuckYeah
                 </button>
                 <div class="pong-scoreboard">
-                  <span style="color: #fbbf24;">💣 BOMBERMAN</span>
+                  <span style="color: #f8d878;">BOMBERMAN / 8-BIT</span>
                   <span>—</span>
                   <span>BOMBAS: <span id="bomberman-bombs-count" style="color:#00ff66;">1</span></span>
                   <span>—</span>
-                  <span>VEL: <span id="bomberman-speed-val" style="color:#38bdf8;">1.0x</span></span>
+                  <span>VEL: <span id="bomberman-speed-val" style="color:#68b8f8;">1.0x</span></span>
                   <span>—</span>
                   <span>FUEGO: <span id="bomberman-fire-val" style="color:#f87171;">3</span></span>
                 </div>
                 <div class="pong-controls-actions" style="width: auto;">
                   <button class="pong-action-btn" onclick="resetBombermanGame()">
-                    🔄 Reiniciar
+                    Reiniciar
                   </button>
                 </div>
               </div>
@@ -6630,10 +6690,10 @@
             <div class="bomberman-oldweb-controls" id="bomberman-oldweb-controls">
               <div class="oldweb-ctrl-header">
                 <div class="oldweb-ctrl-title">
-                  <span class="oldweb-ctrl-icon">🎮</span> CONTROLES RETRO [D-PAD 4-VÍAS]
+                  <span class="oldweb-ctrl-icon">[+]</span> CONTROLES [D-PAD 4-VÍAS]
                 </div>
                 <div class="oldweb-ctrl-badges">
-                  <span class="oldweb-ctrl-badge">WIN95 v4.0</span>
+                  <span class="oldweb-ctrl-badge">8-BIT</span>
                 </div>
               </div>
 
@@ -6657,7 +6717,7 @@
                 <!-- Botón de Acción Bomba y Acciones Auxiliares -->
                 <div class="oldweb-actions-section">
                   <button type="button" class="oldweb-bomb-btn" id="btn-touch-bomb-main" aria-label="Poner Bomba">
-                    <span class="oldweb-bomb-icon">💣</span>
+                    <span class="bomber-pixel-bomb" aria-hidden="true"></span>
                     <span class="oldweb-bomb-caption">BOMBA</span>
                     <span class="oldweb-bomb-sub">[Espacio]</span>
                   </button>
@@ -12163,7 +12223,7 @@
       };
 
       // ==========================================================
-      // MOTOR DE JUEGO: BOMBERMAN (HTML5 Canvas Arcade - Free Movement & Game Boy)
+      // MOTOR DE JUEGO: BOMBERMAN (Arcade 8-bit / sprites 16x16)
       // ==========================================================
       const bombermanCanvas = document.getElementById('bomberman-game');
       const bombermanCtx = bombermanCanvas ? bombermanCanvas.getContext('2d') : null;
@@ -12179,27 +12239,113 @@
       const bombNumRows = 13;
       const bombNumCols = 15;
 
-      const softWallCanvas = document.createElement('canvas');
-      const softWallCtx = softWallCanvas.getContext('2d');
-      softWallCanvas.width = softWallCanvas.height = bombGrid;
-      softWallCtx.fillStyle = 'black';
-      softWallCtx.fillRect(0, 0, bombGrid, bombGrid);
-      softWallCtx.fillStyle = '#a9a9a9';
-      softWallCtx.fillRect(1, 1, bombGrid - 2, 20);
-      softWallCtx.fillRect(0, 23, 20, 18);
-      softWallCtx.fillRect(22, 23, 42, 18);
-      softWallCtx.fillRect(0, 43, 42, 20);
-      softWallCtx.fillRect(44, 43, 20, 20);
+      // Arte nativo de 16x16: cada píxel se dibuja como un bloque de 4x4.
+      const bomberPalette = {
+        o: '#181828', w: '#f8f8e8', s: '#b8b8c8', p: '#f85898',
+        d: '#a82858', b: '#3858c8', f: '#f8c898', k: '#080818',
+        g: '#585868', y: '#f8d878', r: '#e84828', a: '#f89828'
+      };
+      const bomberSprites = {
+        front: [
+          '.......oo.......','......oppo......','.......oo.......','....oooooooo....',
+          '...owwwwwwwwo...','..owsssssssswo..','..owoffffffowo..','..owofkffkfowo..',
+          '..owofkffkfowo..','...ooffffffoo...','....oooooooo....','...powbbbwwop...',
+          '..ppowbybwwopp..','...ooobbbboo....','....opooopo.....','...oppo.oppo....'
+        ],
+        back: [
+          '.......oo.......','......oppo......','.......oo.......','....oooooooo....',
+          '...owwwwwwwwo...','..owwwwwwwwwwo..','..owwwwwwwwwwo..','..owwwwwwwwwwo..',
+          '..owwwwwwwwwwo..','...owsssssswo...','....oooooooo....','...powbbbwwop...',
+          '..ppowbbbbwopp..','...ooobbbboo....','....opooopo.....','...oppo.oppo....'
+        ],
+        side: [
+          '.......oo.......','......oppo......','.......oo.......','....ooooooo.....',
+          '...owwwwwwwo....','..owsssssswwo...','..owofffffwwo...','..owokffffwwo...',
+          '..owokffffwwo...','...oofffffwo....','....ooooooo.....','....owbbwwop....',
+          '....owbbwwopp...','....oobbbboo....','.....opoopo.....','....oppooppo....'
+        ],
+        bomb: [
+          '..........ya....','.........yy.....','........a.......','.......oo.......',
+          '.....ookkooo....','....okgggkkko...','...okgwwgkkkko..','...okgwggkkkko..',
+          '..okggggkkkkkko.','..okggkkkkkkkko.','..okgkkkkkkkkko.','...okkkkkkkkko..',
+          '...okkkkkkkkko..','....okkkkkkko...','.....ooooooo....','................'
+        ],
+        fire: [
+          '.......r........','......rar.......','......rar..r....','...r.rayar.rar..',
+          '...raraayarar...','...rayyyyayar...','..rayyyyyyyar...','..rayywwyyyar...',
+          '...aywwwwyya....','...aywwwwyya....','....aywwyya.....','.....ayyya......',
+          '......aaa.......','................','................','................'
+        ],
+        speed: [
+          '................','.......yyyy.....','......yyyy......','.....yyyy.......',
+          '....yyyy........','...yyyy.........','..yyyyyyyyyy....','..yyyyyyyyy.....',
+          '......yyyy......','.....yyyy.......','....yyyy........','...yyyy.........',
+          '..yyy...........','..yy............','................','................'
+        ]
+      };
+      function drawBomberSprite(ctx, sprite, x, y, scale = 4, mirror = false, palette = bomberPalette) {
+        x = Math.round(x / scale) * scale;
+        y = Math.round(y / scale) * scale;
+        for (let row = 0; row < sprite.length; row++) {
+          for (let col = 0; col < sprite[row].length; col++) {
+            const color = palette[sprite[row][col]];
+            if (!color) continue;
+            ctx.fillStyle = color;
+            ctx.fillRect(x + (mirror ? 15 - col : col) * scale, y + row * scale, scale, scale);
+          }
+        }
+      }
 
-      const wallCanvas = document.createElement('canvas');
-      const wallCtx = wallCanvas.getContext('2d');
-      wallCanvas.width = wallCanvas.height = bombGrid;
-      wallCtx.fillStyle = 'black';
-      wallCtx.fillRect(0, 0, bombGrid, bombGrid);
-      wallCtx.fillStyle = 'white';
-      wallCtx.fillRect(0, 0, bombGrid - 2, bombGrid - 2);
-      wallCtx.fillStyle = '#a9a9a9';
-      wallCtx.fillRect(2, 2, bombGrid - 4, bombGrid - 4);
+      function createBomberTile(kind) {
+        const tile = document.createElement('canvas');
+        tile.width = tile.height = bombGrid;
+        const ctx = tile.getContext('2d');
+        const rect = (color, x, y, w, h) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(x * 4, y * 4, w * 4, h * 4);
+        };
+        if (kind === 'wall') {
+          rect('#181828', 0, 0, 16, 16);
+          rect('#e8e8d8', 1, 1, 14, 14);
+          rect('#9898a8', 2, 2, 13, 13);
+          rect('#c8c8d8', 2, 2, 12, 11);
+          rect('#e8e8d8', 3, 3, 2, 2);
+          rect('#787888', 12, 12, 2, 2);
+        } else if (kind === 'brick') {
+          rect('#382818', 0, 0, 16, 16);
+          for (let row = 0; row < 4; row++) {
+            const offset = row % 2 ? -4 : 0;
+            for (let col = offset; col < 16; col += 8) {
+              const left = Math.max(0, col), right = Math.min(16, col + 7);
+              rect('#b87838', left, row * 4, right - left, 3);
+              rect('#e8a858', left, row * 4, right - left, 1);
+              rect('#885028', left, row * 4 + 2, right - left, 1);
+            }
+          }
+        } else {
+          rect('#388838', 0, 0, 16, 16);
+          rect('#48a048', 0, 0, 16, 1);
+          rect('#48a048', 0, 0, 1, 16);
+          rect('#286828', 15, 1, 1, 15);
+          rect('#286828', 1, 15, 14, 1);
+          rect('#48a048', 4, 5, 1, 1);
+          rect('#286828', 11, 10, 1, 1);
+        }
+        return tile;
+      }
+      const softWallCanvas = createBomberTile('brick');
+      const wallCanvas = createBomberTile('wall');
+      const bomberFloorTile = createBomberTile('floor');
+      const bomberFloorCanvas = document.createElement('canvas');
+      bomberFloorCanvas.width = bombNumCols * bombGrid;
+      bomberFloorCanvas.height = bombNumRows * bombGrid;
+      const bomberFloorCtx = bomberFloorCanvas.getContext('2d');
+      for (let row = 0; row < bombNumRows; row++) {
+        for (let col = 0; col < bombNumCols; col++) {
+          bomberFloorCtx.drawImage(bomberFloorTile, col * bombGrid, row * bombGrid);
+        }
+      }
+      if (bombermanCtx) bombermanCtx.imageSmoothingEnabled = false;
 
       const bombTypes = {
         wall: '▉',
@@ -12338,41 +12484,9 @@
           const x = this.x;
           const y = this.y;
 
-          // Sombra
-          bombermanCtx.fillStyle = 'rgba(0,0,0,0.35)';
-          bombermanCtx.beginPath();
-          bombermanCtx.ellipse(x, y + 16, this.radius * 0.9, this.radius * 0.45, 0, 0, Math.PI * 2);
-          bombermanCtx.fill();
-
-          // Cuerpo de la bomba
-          const grad = bombermanCtx.createRadialGradient(x - 6, y - 6, 4, x, y, this.radius);
-          grad.addColorStop(0, '#52525b');
-          grad.addColorStop(0.5, '#18181b');
-          grad.addColorStop(1, '#09090b');
-          bombermanCtx.fillStyle = grad;
-          bombermanCtx.beginPath();
-          bombermanCtx.arc(x, y, this.radius, 0, 2 * Math.PI);
-          bombermanCtx.fill();
-
-          // Brillo especular
-          bombermanCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-          bombermanCtx.beginPath();
-          bombermanCtx.arc(x - 6, y - 6, this.radius * 0.26, 0, 2 * Math.PI);
-          bombermanCtx.fill();
-
-          // Mecha y chispa
-          const fuseY = (this.radius === bombGrid * 0.44 ? bombGrid * 0.15 : 0);
-          bombermanCtx.strokeStyle = '#d97706';
-          bombermanCtx.lineWidth = 3;
-          bombermanCtx.beginPath();
-          bombermanCtx.arc((this.col + 0.72) * bombGrid, (this.row + 0.26) * bombGrid - fuseY, 10, Math.PI, -Math.PI / 2);
-          bombermanCtx.stroke();
-
-          // Chispa titilante
-          bombermanCtx.fillStyle = (Math.floor(this.timer / 80) % 2 === 0) ? '#fef08a' : '#ef4444';
-          bombermanCtx.beginPath();
-          bombermanCtx.arc((this.col + 0.72) * bombGrid + 10, (this.row + 0.26) * bombGrid - fuseY - 10, 4, 0, Math.PI * 2);
-          bombermanCtx.fill();
+          const flash = Math.floor(this.timer / 160) % 2;
+          drawBomberSprite(bombermanCtx, bomberSprites.bomb, x - 32, y - 32, 4, false,
+            { ...bomberPalette, y: flash ? '#f8f8e8' : '#f8d878', a: flash ? '#e84828' : '#f89828' });
         };
       }
 
@@ -12395,26 +12509,26 @@
           const x = this.col * bombGrid;
           const y = this.row * bombGrid;
           const horizontal = this.dir.col;
-          const vertical = this.dir.row;
-
-          bombermanCtx.fillStyle = '#D72B16';
-          bombermanCtx.fillRect(x, y, bombGrid, bombGrid);
-
-          bombermanCtx.fillStyle = '#F39642';
+          const flicker = Math.floor(this.timer / 64) % 2;
+          // Llama en cruz, con contorno escalonado y núcleo de píxeles blancos.
+          const rect = (color, px, py, w, h) => {
+            bombermanCtx.fillStyle = color;
+            bombermanCtx.fillRect(x + px * 4, y + py * 4, w * 4, h * 4);
+          };
           if (center || horizontal) {
-            bombermanCtx.fillRect(x, y + 6, bombGrid, bombGrid - 12);
+            rect('#e84828', 0, 4, 16, 8);
+            rect('#f89828', 0, 5, 16, 6);
+            rect('#f8d878', 0, 6, 16, 4);
+            rect('#f8f8e8', 0, 7, 16, 2);
           }
-          if (center || vertical) {
-            bombermanCtx.fillRect(x + 6, y, bombGrid - 12, bombGrid);
+          if (center || !horizontal) {
+            rect('#e84828', 4, 0, 8, 16);
+            rect('#f89828', 5, 0, 6, 16);
+            rect('#f8d878', 6, 0, 4, 16);
+            rect('#f8f8e8', 7, 0, 2, 16);
           }
-
-          bombermanCtx.fillStyle = '#FFE5A8';
-          if (center || horizontal) {
-            bombermanCtx.fillRect(x, y + 12, bombGrid, bombGrid - 24);
-          }
-          if (center || vertical) {
-            bombermanCtx.fillRect(x + 12, y, bombGrid - 24, bombGrid);
-          }
+          rect(flicker ? '#f8f8e8' : '#f8d878', 5, 5, 2, 2);
+          rect(flicker ? '#f8d878' : '#f8f8e8', 9, 9, 2, 2);
         };
       }
 
@@ -12435,44 +12549,17 @@
 
         this.render = function() {
           if (!bombermanCtx) return;
-          const pulse = 1 + 0.08 * Math.sin(this.timer * 0.008);
-          const size = 32 * pulse;
-          const hSize = size / 2;
-
-          bombermanCtx.save();
-          bombermanCtx.translate(this.x, this.y);
-
-          let bgColor = '#fbbf24';
-          let icon = '💣';
-          let borderCol = '#fef08a';
-          if (this.kind === 'speed') {
-            bgColor = '#0284c7';
-            icon = '⚡';
-            borderCol = '#7dd3fc';
-          } else if (this.kind === 'fire') {
-            bgColor = '#dc2626';
-            icon = '🔥';
-            borderCol = '#fca5a5';
-          }
-
-          // Sombra y tarjeta retro
-          bombermanCtx.fillStyle = 'rgba(0,0,0,0.5)';
-          bombermanCtx.fillRect(-hSize + 2, -hSize + 2, size, size);
-
-          bombermanCtx.fillStyle = bgColor;
-          bombermanCtx.fillRect(-hSize, -hSize, size, size);
-
-          bombermanCtx.strokeStyle = borderCol;
-          bombermanCtx.lineWidth = 2;
-          bombermanCtx.strokeRect(-hSize + 1, -hSize + 1, size - 2, size - 2);
-
-          // Icono
-          bombermanCtx.font = '16px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-          bombermanCtx.textAlign = 'center';
-          bombermanCtx.textBaseline = 'middle';
-          bombermanCtx.fillText(icon, 0, 0);
-
-          bombermanCtx.restore();
+          const x = this.col * bombGrid + 8;
+          const y = this.row * bombGrid + 8;
+          bombermanCtx.fillStyle = '#181828';
+          bombermanCtx.fillRect(x, y, 48, 48);
+          bombermanCtx.fillStyle = Math.floor(this.timer / 240) % 2 ? '#f8d878' : '#f8f8e8';
+          bombermanCtx.fillRect(x + 4, y + 4, 40, 40);
+          bombermanCtx.fillStyle = '#3858c8';
+          bombermanCtx.fillRect(x + 8, y + 8, 32, 32);
+          const sprite = this.kind === 'speed' ? bomberSprites.speed
+            : this.kind === 'fire' ? bomberSprites.fire : bomberSprites.bomb;
+          drawBomberSprite(bombermanCtx, sprite, x + 8, y + 8, 2);
         };
       }
 
@@ -12530,95 +12617,20 @@
           if (!bombermanCtx) return;
           const x = this.x;
           const y = this.y;
-          const vr = this.visualRadius || 25;
-
-          bombermanCtx.save();
-
-          // Sombra ovalada suave escalada
-          bombermanCtx.fillStyle = 'rgba(0,0,0,0.35)';
-          bombermanCtx.beginPath();
-          bombermanCtx.ellipse(x, y + vr * 0.78, vr * 0.95, vr * 0.45, 0, 0, Math.PI * 2);
-          bombermanCtx.fill();
-
           if (!this.alive) {
-            bombermanCtx.fillStyle = '#ef4444';
-            bombermanCtx.beginPath();
-            bombermanCtx.arc(x, y, vr, 0, 2 * Math.PI);
-            bombermanCtx.fill();
-            bombermanCtx.fillStyle = '#000000';
-            bombermanCtx.font = 'bold 22px monospace';
-            bombermanCtx.textAlign = 'center';
-            bombermanCtx.textBaseline = 'middle';
-            bombermanCtx.fillText('X', x, y);
-            bombermanCtx.restore();
+            drawBomberSprite(bombermanCtx, bomberSprites.front, x - 32, y - 32, 4, false,
+              { ...bomberPalette, w: '#e84828', s: '#a82828', f: '#f8d878' });
             return;
           }
-
-          // Zapatitos rosas animados al caminar (más grandes y definidos)
-          const footOffset = Math.sin(this.animTick) * 4.5;
-          bombermanCtx.fillStyle = '#ec4899';
-          if (this.facing === 'left' || this.facing === 'right') {
-            bombermanCtx.fillRect(x - 10 + footOffset, y + vr - 5, 8, 7);
-            bombermanCtx.fillRect(x + 2 - footOffset, y + vr - 5, 8, 7);
-          } else {
-            bombermanCtx.fillRect(x - 11, y + vr - 5 + footOffset, 8, 7);
-            bombermanCtx.fillRect(x + 3, y + vr - 5 - footOffset, 8, 7);
+          const sprite = this.facing === 'up' ? bomberSprites.back
+            : this.facing === 'left' || this.facing === 'right' ? bomberSprites.side : bomberSprites.front;
+          const frame = sprite.slice();
+          // Dos fotogramas de marcha, sin interpolación ni sombras suaves.
+          if (this.isMoving && Math.floor(this.animTick * 2) % 2) {
+            frame[14] = '...oppo..opo....';
+            frame[15] = '....oo..oppo....';
           }
-
-          // Traje blanco clásico (cabeza y cuerpo más robusto)
-          bombermanCtx.fillStyle = '#ffffff';
-          bombermanCtx.strokeStyle = '#0f172a';
-          bombermanCtx.lineWidth = 2.5;
-          bombermanCtx.beginPath();
-          bombermanCtx.arc(x, y, vr, 0, 2 * Math.PI);
-          bombermanCtx.fill();
-          bombermanCtx.stroke();
-
-          // Cinturón azul
-          bombermanCtx.fillStyle = '#0284c7';
-          bombermanCtx.fillRect(x - vr + 3, y + 3, (vr - 3) * 2, 5);
-
-          // Visor azul celeste ampliado
-          let visorX = x;
-          let visorY = y - 3;
-          if (this.facing === 'left') visorX = x - 5;
-          if (this.facing === 'right') visorX = x + 5;
-          if (this.facing === 'up') visorY = y - 7;
-          if (this.facing === 'down') visorY = y - 1;
-
-          bombermanCtx.fillStyle = '#bae6fd';
-          bombermanCtx.beginPath();
-          bombermanCtx.ellipse(visorX, visorY, 14, 10, 0, 0, Math.PI * 2);
-          bombermanCtx.fill();
-          bombermanCtx.strokeStyle = '#0284c7';
-          bombermanCtx.lineWidth = 2;
-          bombermanCtx.stroke();
-
-          // Ojos pixelados según la orientación
-          if (this.facing !== 'up') {
-            bombermanCtx.fillStyle = '#0f172a';
-            if (this.facing === 'left') {
-              bombermanCtx.fillRect(visorX - 8, visorY - 5, 4, 9);
-              bombermanCtx.fillRect(visorX - 2, visorY - 5, 4, 9);
-            } else if (this.facing === 'right') {
-              bombermanCtx.fillRect(visorX + 2, visorY - 5, 4, 9);
-              bombermanCtx.fillRect(visorX + 8, visorY - 5, 4, 9);
-            } else {
-              bombermanCtx.fillRect(visorX - 7, visorY - 5, 4, 9);
-              bombermanCtx.fillRect(visorX + 3, visorY - 5, 4, 9);
-            }
-          }
-
-          // Antena rosa superior
-          bombermanCtx.fillStyle = '#ec4899';
-          bombermanCtx.beginPath();
-          bombermanCtx.arc(x, y - vr - 4, 6.5, 0, Math.PI * 2);
-          bombermanCtx.fill();
-          bombermanCtx.strokeStyle = '#9d174d';
-          bombermanCtx.lineWidth = 1.5;
-          bombermanCtx.stroke();
-
-          bombermanCtx.restore();
+          drawBomberSprite(bombermanCtx, frame, x - 32, y - 32, 4, this.facing === 'right');
         }
       };
 
@@ -12869,7 +12881,7 @@
         // Actualizar movimiento fluido por cuadrícula a velocidad constante
         updateBombermanGridMovement(dt);
 
-        bombermanCtx.clearRect(0, 0, bombermanCanvas.width, bombermanCanvas.height);
+        bombermanCtx.drawImage(bomberFloorCanvas, 0, 0);
 
         // Dibujar celdas (muros sólidos y cajas suaves)
         for (let row = 0; row < bombNumRows; row++) {
@@ -12919,7 +12931,9 @@
           bombermanCtx.textAlign = 'center';
           bombermanCtx.fillStyle = ft.color;
           bombermanCtx.shadowColor = '#000000';
-          bombermanCtx.shadowBlur = 4;
+          bombermanCtx.shadowBlur = 0;
+          bombermanCtx.shadowOffsetX = 4;
+          bombermanCtx.shadowOffsetY = 4;
           bombermanCtx.fillText(ft.text, ft.x, ft.y);
           bombermanCtx.restore();
         }
@@ -12932,7 +12946,7 @@
           bombermanCtx.fillStyle = '#ff4444';
           bombermanCtx.font = 'bold 40px "Courier New", monospace';
           bombermanCtx.textAlign = 'center';
-          bombermanCtx.fillText('¡HAS CAÍDO EN LA EXPLOSIÓN!', bombermanCanvas.width / 2, bombermanCanvas.height / 2 - 20);
+          bombermanCtx.fillText('GAME OVER', bombermanCanvas.width / 2, bombermanCanvas.height / 2 - 20);
           bombermanCtx.fillStyle = '#ffffff';
           bombermanCtx.font = '20px "Courier New", monospace';
           bombermanCtx.fillText('Pulsa [Reiniciar] para volver a jugar', bombermanCanvas.width / 2, bombermanCanvas.height / 2 + 30);
