@@ -1,0 +1,52 @@
+[
+  {
+    "id": "doc-leeme-txt",
+    "name": "LEEME.TXT",
+    "size": "428 B",
+    "bytes": 428,
+    "type": "text/plain",
+    "date": "1997-10-24 14:32",
+    "url": "documentos/LEEME.TXT",
+    "isSystem": true
+  },
+  {
+    "id": "doc-1789615414297-istvk",
+    "name": "nueva_nota.txt",
+    "size": "46 B",
+    "bytes": 46,
+    "type": "text/plain",
+    "date": "2026-09-17 03:23",
+    "url": "documentos/nueva_nota.txt",
+    "isSystem": false
+  },
+  {
+    "id": "doc-1789617216025-xq59d",
+    "name": "3.txt",
+    "size": "42 B",
+    "bytes": 42,
+    "type": "text/plain",
+    "date": "2026-09-17 03:53",
+    "url": "documentos/3.txt",
+    "isSystem": false
+  },
+  {
+    "id": "doc-1789619294720-3xg1n",
+    "name": "ASCIis.txt",
+    "size": "565 B",
+    "bytes": 565,
+    "type": "text/plain",
+    "date": "2026-09-17 04:28",
+    "url": "documentos/ASCIis.txt",
+    "isSystem": false
+  },
+  {
+    "id": "doc-1789619540274-z1z05",
+    "name": "cursor.txt",
+    "size": "74 B",
+    "bytes": 74,
+    "type": "text/plain",
+    "date": "2026-09-17 04:32",
+    "url": "documentos/cursor.txt",
+    "isSystem": false
+  }
+]

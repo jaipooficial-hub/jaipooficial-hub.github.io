@@ -1,0 +1,9 @@
+﻿LEEME.TXT - REGISTRO TECNICO Y SISTEMA AXBYZ-OS
+==================================================
+Arquitectura: Technical Dashboard / Retro Data Grid
+Version del Kernel: 1.21GW (Win95/Y2K Edition)
+
+- Explorador de Archivos y Documentos:
+  Puedes anadir nuevos archivos haciendo clic en [Anadir Archivo]
+  o arrastrando archivos directamente a esta ventana.
+  Los archivos quedan almacenados en la base de datos persistente.

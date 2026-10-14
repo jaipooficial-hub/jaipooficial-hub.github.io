@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>3D Space Cadet Pinball - WebAssembly</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #pinball-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background: #000000;
+      overflow: hidden;
+    }
+
+    /* Barra Superior con Controles y Estado */
+    #pinball-header {
+      width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+      border-bottom: 1px solid #374151;
+      z-index: 20;
+    }
+
+    .header-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #60a5fa;
+      letter-spacing: 0.5px;
+    }
+
+    .header-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-btn {
+      background: #374151;
+      color: #f3f4f6;
+      border: 1px solid #4b5563;
+      border-radius: 3px;
+      padding: 4px 10px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    .hud-btn:hover {
+      background: #4b5563;
+      border-color: #60a5fa;
+    }
+
+    .hud-btn:active {
+      transform: translateY(1px);
+      background: #1f2937;
+    }
+
+    /* Área central de juego / Canvas */
+    #canvas-viewport {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background: #000000;
+      overflow: hidden;
+    }
+
+    #canvas {
+      display: block;
+      width: 600px;
+      height: 440px;
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 600 / 440;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      border: 0 none;
+      background-color: #000000;
+      outline: none;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Pantalla de Carga Retro */
+    #loading-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #030712;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 50;
+      transition: opacity 0.3s ease;
+    }
+
+    .retro-loader-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #60a5fa;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .retro-loader-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .retro-progress-box {
+      width: 280px;
+      max-width: 85vw;
+      background: #111827;
+      border: 2px solid #374151;
+      border-radius: 4px;
+      padding: 3px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+      margin-bottom: 12px;
+    }
+
+    .retro-progress-bar {
+      height: 16px;
+      width: 5%;
+      background: linear-gradient(90deg, #2563eb, #38bdf8);
+      border-radius: 2px;
+      transition: width 0.15s ease-out;
+    }
+
+    #status {
+      font-size: 12px;
+      color: #22c55e;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* Barra inferior de controles táctiles */
+    #touch-controls {
+      width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #0f172a;
+      border-top: 1px solid #1e293b;
+      z-index: 20;
+    }
+
+    .touch-btn {
+      flex: 1;
+      height: 48px;
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      color: #ffffff;
+      border: 2px solid #475569;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+      transition: background 0.1s, transform 0.05s;
+    }
+
+    .touch-btn .sub-hint {
+      font-size: 9px;
+      color: #94a3b8;
+      font-weight: normal;
+      margin-top: 2px;
+    }
+
+    .touch-btn.plunger {
+      flex: 1.2;
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border-color: #ef4444;
+      color: #ffffff;
+    }
+
+    .touch-btn.plunger .sub-hint {
+      color: #fca5a5;
+    }
+
+    .touch-btn:active, .touch-btn.active {
+      transform: translateY(2px);
+      background: #0f172a;
+      border-color: #38bdf8;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .touch-btn.plunger:active, .touch-btn.plunger.active {
+      transform: translateY(2px);
+      background: #7f1d1d;
+      border-color: #f87171;
+    }
+
+    @media (max-width: 480px) {
+      .touch-btn {
+        height: 44px;
+        font-size: 11px;
+      }
+      .touch-btn .sub-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+  <div id="pinball-container">
+    
+    <!-- Header con información y acciones -->
+    <div id="pinball-header">
+      <div class="header-badge">
+        <span class="header-dot">●</span>
+        <span>SPACE CADET PINBALL 3D</span>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-new-game" class="hud-btn" type="button" title="Comenzar nueva partida (F2)">
+          <span>🎮</span>
+          <span>NUEVA (F2)</span>
+        </button>
+        <button id="btn-sound-toggle" class="hud-btn" type="button" title="Activar / Desactivar Sonido">
+          <span id="sound-icon">🔊</span>
+          <span id="sound-text">SONIDO</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor del Canvas de Juego -->
+    <div id="canvas-viewport">
+      
+      <!-- Pantalla de Carga -->
+      <div id="loading-screen">
+        <div class="retro-loader-title">🚀 3D SPACE CADET PINBALL</div>
+        <div class="retro-loader-sub">Cargando motor WebAssembly y recursos de audio...</div>
+        
+        <div class="retro-progress-box">
+          <div class="retro-progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div id="status">Descargando mesa de juego...</div>
+      </div>
+
+      <!-- Lienzo donde SDL2 / Emscripten dibuja -->
+      <canvas class="emscripten" id="canvas" width="600" height="440" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    </div>
+
+    <!-- Controles táctiles inferiores (Flippers y Plunger) -->
+    <div id="touch-controls">
+      <button class="touch-btn" id="btn-flipper-l" type="button" aria-label="Paleta Izquierda">
+        <span>◄ PALETA IZQ</span>
+        <span class="sub-hint">[ A / Z / ◄ ]</span>
+      </button>
+
+      <button class="touch-btn plunger" id="btn-plunger" type="button" aria-label="Lanzar Bola">
+        <span>TIRAR RESORTE</span>
+        <span class="sub-hint">[ ESPACIO / ▼ ]</span>
+      </button>
+
+      <button class="touch-btn" id="btn-flipper-r" type="button" aria-label="Paleta Derecha">
+        <span>PALETA DER ►</span>
+        <span class="sub-hint">[ L / / / ► ]</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================================
+    // CONFIGURACIÓN OFICIAL DEL MOTOR EMSCRIPTEN
+    // ==========================================================
+    var statusElement = document.getElementById('status');
+    var progressBar = document.getElementById('progress-bar');
+    var loadingScreen = document.getElementById('loading-screen');
+    var canvasElement = document.getElementById('canvas');
+    var isPinballReady = false;
+    var isMuted = (function() {
+      try {
+        return localStorage.getItem('pinball_muted') === 'true';
+      } catch (e) {
+        return false;
+      }
+    })();
+
+    // Interceptar AudioContext para bloquear reanudación si está silenciado
+    (function() {
+      try {
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx && AudioCtx.prototype) {
+          var origResume = AudioCtx.prototype.resume;
+          AudioCtx.prototype.resume = function() {
+            if (isMuted) {
+              return Promise.resolve();
+            }
+            return origResume.apply(this, arguments);
+          };
+        }
+      } catch (e) {}
+    })();
+
+    // Despachador de teclas compatible con SDL2 Emscripten
+    window.dispatchPinballKey = function(type, key, code, keyCode) {
+      try {
+        var evt;
+        try {
+          evt = new KeyboardEvent(type, {
+            key: key,
+            code: code,
+            keyCode: keyCode,
+            which: keyCode,
+            bubbles: true,
+            cancelable: true
+          });
+        } catch (e) {
+          evt = document.createEvent('KeyboardEvent');
+          evt.initEvent(type, true, true);
+        }
+        try { Object.defineProperty(evt, 'keyCode', { get: function() { return keyCode; } }); } catch (e) {}
+        try { Object.defineProperty(evt, 'which', { get: function() { return keyCode; } }); } catch (e) {}
+        try { Object.defineProperty(evt, 'code', { get: function() { return code; } }); } catch (e) {}
+        try { Object.defineProperty(evt, 'key', { get: function() { return key; } }); } catch (e) {}
+        evt._synthesized = true;
+        
+        window.dispatchEvent(evt);
+        document.dispatchEvent(evt);
+        if (canvasElement) canvasElement.dispatchEvent(evt);
+      } catch (err) {
+        console.warn('[Pinball] Error despachando tecla:', err);
+      }
+    };
+
+    function applyMuteState() {
+      try {
+        localStorage.setItem('pinball_muted', isMuted ? 'true' : 'false');
+      } catch (e) {}
+      if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      if (soundText) soundText.textContent = isMuted ? 'MUTED' : 'SONIDO';
+      if (btnSound) btnSound.style.color = isMuted ? '#f87171' : '#f3f4f6';
+
+      try {
+        if (window.Module && window.Module.SDL2 && window.Module.SDL2.audioContext) {
+          var ctx = window.Module.SDL2.audioContext;
+          if (isMuted) {
+            ctx.suspend();
+          } else {
+            ctx.resume();
+          }
+        }
+      } catch (err) {}
+    }
+
+    // Desbloqueo del contexto de audio al interactuar
+    function unlockAudio() {
+      if (isMuted) return;
+      try {
+        if (window.Module && window.Module.SDL2 && window.Module.SDL2.audioContext) {
+          var ctx = window.Module.SDL2.audioContext;
+          if (ctx.state === 'suspended') {
+            ctx.resume();
+          }
+        }
+      } catch (e) {}
+    }
+
+    ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(function(evtName) {
+      window.addEventListener(evtName, unlockAudio, { passive: true });
+    });
+
+    function showGameCanvas() {
+      if (isPinballReady) return;
+      isPinballReady = true;
+      console.log('[Pinball] Mesa 3D Space Cadet lista para jugar.');
+      
+      if (canvasElement) {
+        canvasElement.style.display = 'block';
+        try { canvasElement.focus(); } catch (e) {}
+      }
+
+      if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(function() {
+          loadingScreen.style.display = 'none';
+        }, 300);
+      }
+
+      // Notificar al contenedor padre (_red en index.html)
+      try {
+        if (window.parent && window.parent !== window) {
+          if (typeof window.parent.onPinballReady === 'function') {
+            window.parent.onPinballReady();
+          }
+          window.parent.postMessage({ type: 'PINBALL_READY' }, '*');
+        }
+      } catch (e) {}
+    }
+
+    // Configuración del objeto global Module para Emscripten
+    var Module = {
+      arguments: [],
+      preRun: [],
+      postRun: [
+        function() {
+          console.log('[Pinball Engine] postRun ejecutado correctamente.');
+          showGameCanvas();
+        }
+      ],
+      print: function(text) {
+        console.log('[Pinball]', text);
+      },
+      printErr: function(text) {
+        console.warn('[Pinball]', text);
+      },
+      locateFile: function(path, prefix) {
+        if (prefix) return prefix + path;
+        return '/pinball/' + path;
+      },
+      canvas: (function() {
+        var c = document.getElementById('canvas');
+        if (c) {
+          c.addEventListener('webglcontextlost', function(e) {
+            alert('Contexto WebGL perdido. Recargando mesa...');
+            e.preventDefault();
+            window.location.reload();
+          }, false);
+        }
+        return c;
+      })(),
+      setStatus: function(text) {
+        if (Module.setStatus.last || (Module.setStatus.last = { time: Date.now(), text: '' }), text !== Module.setStatus.last.text) {
+          var match = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (!(match && now - Module.setStatus.last.time < 30)) {
+            Module.setStatus.last.time = now;
+            Module.setStatus.last.text = text;
+            
+            var pct = 0;
+            if (match) {
+              var cur = parseInt(match[2]);
+              var max = parseInt(match[4]);
+              pct = max > 0 ? Math.round((cur / max) * 100) : 0;
+              if (progressBar) progressBar.style.width = Math.max(5, pct) + '%';
+              if (statusElement) statusElement.textContent = 'Descargando recursos... ' + pct + '%';
+              
+              try {
+                if (window.parent && window.parent !== window) {
+                  window.parent.postMessage({ type: 'PINBALL_PROGRESS', percent: pct, text: text }, '*');
+                }
+              } catch (e) {}
+            } else {
+              if (!text || text.indexOf('Running') !== -1) {
+                if (progressBar) progressBar.style.width = '100%';
+                showGameCanvas();
+              } else {
+                if (statusElement) statusElement.textContent = text;
+              }
+            }
+          }
+        }
+      },
+      totalDependencies: 0,
+      monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        if (left === 0) {
+          setTimeout(showGameCanvas, 150);
+        } else {
+          var loaded = this.totalDependencies - left;
+          var pct = Math.round((loaded / this.totalDependencies) * 100);
+          if (progressBar) progressBar.style.width = Math.max(10, pct) + '%';
+          if (statusElement) statusElement.textContent = 'Preparando mesa (' + loaded + '/' + this.totalDependencies + ')...';
+        }
+      }
+    };
+
+    Module.setStatus('Descargando mesa de juego...');
+
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error('[Pinball onerror]', message, error);
+      if (statusElement && !isPinballReady) {
+        statusElement.textContent = 'Aviso: ' + (message || 'Iniciando...');
+      }
+    };
+
+    // Temporizador de seguridad: si tras 5 segundos no se ha llamado a showGameCanvas, forzar desbloqueo
+    setTimeout(function() {
+      if (!isPinballReady) {
+        console.log('[Pinball] Temporizador de seguridad finalizado.');
+        showGameCanvas();
+      }
+    }, 5000);
+
+    // ==========================================================
+    // CONTROLADORES DE ENTRADA Y ACCIONES DE USUARIO
+    // ==========================================================
+
+    // Mapeo transparente de teclas locales
+    function handlePinballKey(e) {
+      if (e._synthesized) return;
+      var type = e.type;
+
+      // Paleta Izquierda: A, Z o Flecha Izquierda -> 'z' / KeyZ / 90
+      if (e.code === 'KeyA' || e.key === 'a' || e.key === 'A' || e.code === 'KeyZ' || e.key === 'z' || e.key === 'Z' || e.code === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, 'z', 'KeyZ', 90);
+        return;
+      }
+
+      // Paleta Derecha: L, / o Flecha Derecha -> '/' / Slash / 191
+      if (e.code === 'KeyL' || e.key === 'l' || e.key === 'L' || e.code === 'Slash' || e.key === '/' || e.code === 'ArrowRight') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, '/', 'Slash', 191);
+        return;
+      }
+
+      // Lanzador de bola: Espacio o Flecha Abajo -> ' ' / Space / 32
+      if (e.code === 'Space' || e.key === ' ' || e.code === 'ArrowDown') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, ' ', 'Space', 32);
+        return;
+      }
+
+      // Nueva Partida: F2 -> 'F2' / F2 / 113
+      if (e.key === 'F2' || e.code === 'F2') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, 'F2', 'F2', 113);
+        return;
+      }
+
+      // Nudge izquierda: X
+      if (e.code === 'KeyX' || e.key === 'x' || e.key === 'X') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, 'x', 'KeyX', 88);
+        return;
+      }
+
+      // Nudge derecha: Punto (.)
+      if (e.code === 'Period' || e.key === '.') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.dispatchPinballKey(type, '.', 'Period', 190);
+        return;
+      }
+    }
+
+    window.addEventListener('keydown', handlePinballKey, true);
+    window.addEventListener('keyup', handlePinballKey, true);
+
+    // Escuchar eventos postMessage desde la ventana padre
+    window.addEventListener('message', function(e) {
+      if (!e.data) return;
+      if (e.data.type === 'PINBALL_KEY_EVENT') {
+        window.dispatchPinballKey(e.data.action, e.data.key, e.data.code, e.data.keyCode);
+      }
+    });
+
+    // Helper para botones táctiles / pulsación sostenida
+    function attachButtonAction(btn, onDown, onUp) {
+      if (!btn) return;
+      var isHeld = false;
+
+      function press(e) {
+        if (e && e.cancelable) e.preventDefault();
+        if (isHeld) return;
+        isHeld = true;
+        btn.classList.add('active');
+        unlockAudio();
+        onDown();
+      }
+
+      function release(e) {
+        if (e && e.cancelable) e.preventDefault();
+        if (!isHeld) return;
+        isHeld = false;
+        btn.classList.remove('active');
+        onUp();
+      }
+
+      btn.addEventListener('pointerdown', press);
+      btn.addEventListener('pointerup', release);
+      btn.addEventListener('pointercancel', release);
+      btn.addEventListener('pointerleave', release);
+
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('touchcancel', release, { passive: false });
+
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+      btn.addEventListener('mouseleave', release);
+      btn.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    }
+
+    // Botones táctiles inferiores
+    attachButtonAction(
+      document.getElementById('btn-flipper-l'),
+      function() { window.dispatchPinballKey('keydown', 'z', 'KeyZ', 90); },
+      function() { window.dispatchPinballKey('keyup', 'z', 'KeyZ', 90); }
+    );
+
+    attachButtonAction(
+      document.getElementById('btn-flipper-r'),
+      function() { window.dispatchPinballKey('keydown', '/', 'Slash', 191); },
+      function() { window.dispatchPinballKey('keyup', '/', 'Slash', 191); }
+    );
+
+    attachButtonAction(
+      document.getElementById('btn-plunger'),
+      function() { window.dispatchPinballKey('keydown', ' ', 'Space', 32); },
+      function() { window.dispatchPinballKey('keyup', ' ', 'Space', 32); }
+    );
+
+    // Botón de Nueva Partida (F2)
+    var btnNewGame = document.getElementById('btn-new-game');
+    if (btnNewGame) {
+      btnNewGame.addEventListener('click', function(e) {
+        e.preventDefault();
+        unlockAudio();
+        window.dispatchPinballKey('keydown', 'F2', 'F2', 113);
+        setTimeout(function() {
+          window.dispatchPinballKey('keyup', 'F2', 'F2', 113);
+        }, 100);
+      });
+    }
+
+    // Botón de Sonido (Mute / Unmute)
+    var btnSound = document.getElementById('btn-sound-toggle');
+    var soundIcon = document.getElementById('sound-icon');
+    var soundText = document.getElementById('sound-text');
+    if (btnSound) {
+      applyMuteState();
+      btnSound.addEventListener('click', function(e) {
+        e.preventDefault();
+        isMuted = !isMuted;
+        applyMuteState();
+      });
+    }
+
+    // Asegurar que si el motor se carga más tarde, respete el mute
+    setInterval(function() {
+      if (isMuted && window.Module && window.Module.SDL2 && window.Module.SDL2.audioContext) {
+        var ctx = window.Module.SDL2.audioContext;
+        if (ctx.state === 'running') {
+          ctx.suspend();
+        }
+      }
+    }, 500);
+  </script>
+
+  <!-- Carga del ejecutable de Space Cadet -->
+  <script src="SpaceCadetPinball.js"></script>
+
+</body>
+</html>
