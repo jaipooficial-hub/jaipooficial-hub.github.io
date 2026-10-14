@@ -1,38 +1,13 @@
-# Retro Racer
+# Retro Racer — Coast Run
 
-A pseudo-3d racing sandbox game.
+Carrera arcade de 4.8 km con sprites y tipografía de píxeles. Completa tres sectores antes de agotar el tiempo; los dos checkpoints suman 18 segundos cada uno. El tráfico, las curvas y la banquina requieren controlar la velocidad.
 
-![demo preview](./preview.gif?raw=true)
+- W / flecha arriba: acelerar. S / abajo: frenar.
+- A-D / izquierda-derecha: girar.
+- R: nitro de 3 segundos, con recarga de 10 segundos.
+- P / Escape: pausa. Enter / Espacio: comenzar o continuar.
+- Los botones también sirven con mouse y pantalla táctil, incluyendo acelerar y girar simultáneamente.
 
-## Development notes
+La simulación usa pasos fijos de 1/60 s. `race-model.js` contiene las reglas sin dependencias de navegador; `arcade-view.js` dibuja a 320x240; `arcade-controls.js` combina teclado y contactos táctiles. `main.js` coordina estados, audio y récord local. Perder foco pausa la partida y libera controles.
 
-This game does not use any libraries or dependencies.
-
-Nodejs and live-server are recommended if you want to develop and see live-updates without refreshing your browser.
-
-### To run in dev mode
-
-```
-npm i
-npm start
-```
-
-## Next Features
-
-- Curvy roads
-- Hills
-- Scenery
-- Other cars
-- Collisions
-- Sound effects
-- Fastest laps
-
-## Credits
-
-Idea inspired by Jake Gordon
-
-https://codeincomplete.com/posts/javascript-racer/
-
-Music from Josh Penn-Pierson
-
-https://github.com/OpenSourceMusic/The-Chip-Life
+Se conservan los recursos originales y los módulos anteriores como referencia; la versión activa carga únicamente los módulos indicados arriba. La música original sigue en `assets/sounds/`.

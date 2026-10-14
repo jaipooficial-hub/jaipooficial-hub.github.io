@@ -3864,6 +3864,12 @@
       background: #000000;
     }
 
+    #net-game-retroracer-view .retroracer-frame-container {
+      height: 540px;
+      border: 3px solid #c0c0c0; border-radius: 0;
+      box-shadow: inset 1px 1px #fff, 1px 1px #000;
+    }
+
     /* Bomberman Canvas */
     .bomberman-canvas-container {
       width: 100%;
@@ -4193,7 +4199,7 @@
       }
     }
 
-    /* Snake Canvas */
+    /* Snake: pantalla LCD y controles Win95 */
     .snake-canvas-container {
       width: 100%;
       max-width: 420px;
@@ -4222,6 +4228,30 @@
       image-rendering: crisp-edges;
       transform: translateZ(0);
     }
+
+    #net-game-snake-view .snake-canvas-container {
+      border: 6px solid #c0c0c0;
+      border-radius: 0;
+      box-shadow: inset 2px 2px #fff, 2px 2px #000;
+      background: #9bbc0f;
+    }
+    #net-game-snake-view .pong-top-toolbar { max-width: 420px; background: #181818; }
+    #net-game-snake-view .pong-nav-row, #net-game-snake-view .pong-scoreboard {
+      flex-wrap: wrap; justify-content: center; white-space: normal;
+    }
+    #net-game-snake-view .pong-scoreboard { width: 100%; font-family: 'VT323', monospace; font-size: 20px; }
+    #snake-touch-zone .game-dpad-container {
+      background: #c0c0c0; border-radius: 0; border: 2px solid;
+      border-color: #fff #404040 #404040 #fff; box-shadow: 1px 1px #000;
+    }
+    #snake-touch-zone .dpad-btn {
+      width: 48px; height: 44px; color: #000; background: #c0c0c0;
+      border: 2px solid; border-color: #fff #404040 #404040 #fff;
+      border-radius: 0; font-family: monospace;
+    }
+    #snake-touch-zone .dpad-btn:active { border-color: #404040 #fff #fff #404040; }
+    #snake-touch-zone .dpad-center-hub { color: #0f380f; opacity: 1; font-family: monospace; }
+    #snake-status { color: #c0c0c0; max-width: 400px; font-family: monospace; font-size: 12px; text-align: center; }
 
     /* Controles Táctiles Comunes (D-Pad) */
     .game-touch-zone {
@@ -6403,7 +6433,7 @@
                   <span style="color: #00ff66;">RETRO RACER</span>
                 </div>
                 <div class="jfy-game-card-desc">
-                  Carreras de alta velocidad en autopista pseudo-3D retro con música chiptune.
+                  Coast Run: curvas, tráfico y tres sectores contrarreloj. Llega a meta con tu nitro.
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
                   <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
@@ -6437,7 +6467,7 @@
                   <span style="color: #00ff66;">SNAKE</span>
                 </div>
                 <div class="jfy-game-card-desc">
-                  La mítica serpiente arcade. Come manzanas para crecer y supera tu récord personal.
+                  Pantalla LCD clásica. Come, crece y supera tu récord; pausa cuando quieras.
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
                   <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
@@ -6637,7 +6667,7 @@
                   ⬅ Volver a JuegosFuckYeah
                 </button>
                 <div class="pinball-title-badge">
-                  <span style="color: #f87171;">🏎️ Retro Racer (Arcade OutRun)</span>
+                  <span style="color: #f8d878;">RETRO RACER / COAST RUN</span>
                 </div>
                 <div class="pinball-engine-switch">
                   <button class="pong-action-btn" onclick="reloadRetroRacerGame()" title="Reiniciar Carrera">
@@ -6735,7 +6765,7 @@
             </div>
           </div>
 
-          <!-- VISTA 7: Juego Snake (HTML5 Canvas Straker) -->
+          <!-- VISTA 7: Snake 8-bit / LCD clásico -->
           <div id="net-game-snake-view">
             <div class="pong-top-toolbar">
               <div class="pong-nav-row">
@@ -6743,7 +6773,7 @@
                   ⬅ Volver a JuegosFuckYeah
                 </button>
                 <div class="pong-scoreboard">
-                  <span style="color: #4ade80;">🐍 SNAKE</span>
+                  <span style="color: #9bbc0f;">SNAKE / LCD</span>
                   <span>—</span>
                   <span>PUNTOS: <span id="snake-score-val" style="color:#00ff66;">0</span></span>
                   <span>—</span>
@@ -6753,12 +6783,13 @@
                   <button class="pong-action-btn" onclick="resetSnakeGame()">
                     🔄 Reiniciar
                   </button>
+                  <button class="pong-action-btn" id="snake-action-btn" type="button" onclick="toggleSnakePause()">Jugar</button>
                 </div>
               </div>
             </div>
 
             <div class="snake-canvas-container">
-              <canvas width="400" height="400" id="snake-game"></canvas>
+              <canvas width="400" height="400" id="snake-game" tabindex="0" aria-label="Snake: usa flechas o WASD; Espacio o P para jugar y pausar"></canvas>
             </div>
 
             <!-- Controles Táctiles para Snake -->
@@ -6767,14 +6798,15 @@
                 <button class="pong-touch-btn dpad-btn" id="btn-touch-snake-up" type="button" title="Arriba">▲</button>
                 <div class="dpad-middle-row">
                   <button class="pong-touch-btn dpad-btn" id="btn-touch-snake-left" type="button" title="Izquierda">◀</button>
-                  <span class="dpad-center-hub">🐍</span>
+                  <span class="dpad-center-hub">[+]</span>
                   <button class="pong-touch-btn dpad-btn" id="btn-touch-snake-right" type="button" title="Derecha">▶</button>
                 </div>
                 <button class="pong-touch-btn dpad-btn" id="btn-touch-snake-down" type="button" title="Abajo">▼</button>
               </div>
               <div class="pong-info-strip">
-                Usa Flechas o WASD para girar la serpiente &bull; ¡No choques contigo mismo!
+                Flechas / WASD / D-pad &bull; Espacio o P: jugar / pausa
               </div>
+              <div id="snake-status" role="status">Elige una dirección para comenzar.</div>
             </div>
           </div>
 
@@ -12174,7 +12206,7 @@
       }
 
       // ==========================================================
-      // CONTROLES Y EJECUCIÓN DE RETRO RACER (SIMONDIEP / OPEN SOURCE)
+      // CONTROLES Y EJECUCIÓN DE RETRO RACER / COAST RUN
       // ==========================================================
       window.launchRetroRacerGame = function () {
         stopPongGame();
@@ -13188,128 +13220,137 @@
       const snakeCtx = snakeCanvas ? snakeCanvas.getContext('2d') : null;
       const snakeScoreVal = document.getElementById('snake-score-val');
       const snakeHighScoreVal = document.getElementById('snake-highscore-val');
-
-      let isSnakeRunning = false;
-      let snakeAnimId = null;
-      let snakeCount = 0;
+      let isSnakeRunning = false, snakeAnimId = null, snakeLastTime = 0, snakeElapsed = 0;
       let snakeHighScore = 0;
+      try { snakeHighScore = Math.max(0, Number(localStorage.getItem('axbyz-snake-best')) || 0); } catch (_) {}
+      const snakeGrid = 16, snakeSide = 25;
+      const snakeDirections = { LEFT: [-16, 0], RIGHT: [16, 0], UP: [0, -16], DOWN: [0, 16] };
+      let snakeState = { x: 160, y: 160, dx: 16, dy: 0, cells: [], maxCells: 4, phase: 'ready', turns: [] };
+      let snakeApple = null;
 
-      const snakeGrid = 16;
-      let snakeState = {
-        x: 160,
-        y: 160,
-        dx: snakeGrid,
-        dy: 0,
-        cells: [],
-        maxCells: 4
-      };
-      let snakeApple = {
-        x: 320,
-        y: 320
-      };
-
-      function getRandomSnakeInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-      }
-
-      function updateSnakeScoreUI() {
-        const currentScore = Math.max(0, snakeState.maxCells - 4);
-        if (snakeScoreVal) snakeScoreVal.textContent = currentScore;
-        if (currentScore > snakeHighScore) {
-          snakeHighScore = currentScore;
+      function spawnSnakeApple() {
+        const occupied = new Set(snakeState.cells.map(c => c.x + ',' + c.y));
+        const free = [];
+        for (let y = 0; y < snakeSide; y++) for (let x = 0; x < snakeSide; x++) {
+          if (!occupied.has(x * snakeGrid + ',' + y * snakeGrid)) free.push({ x: x * snakeGrid, y: y * snakeGrid });
         }
-        if (snakeHighScoreVal) snakeHighScoreVal.textContent = snakeHighScore;
+        snakeApple = free.length ? free[Math.floor(Math.random() * free.length)] : null;
+        if (!snakeApple) snakeState.phase = 'won';
       }
-
+      function updateSnakeScoreUI() {
+        const score = snakeState.maxCells - 4;
+        if (score > snakeHighScore) {
+          snakeHighScore = score;
+          try { localStorage.setItem('axbyz-snake-best', String(score)); } catch (_) {}
+        }
+        if (snakeScoreVal) snakeScoreVal.textContent = String(score).padStart(3, '0');
+        if (snakeHighScoreVal) snakeHighScoreVal.textContent = String(snakeHighScore).padStart(3, '0');
+        const action = document.getElementById('snake-action-btn');
+        if (action) action.textContent = snakeState.phase === 'playing' ? 'Pausa' : snakeState.phase === 'paused' ? 'Continuar' : snakeState.phase === 'ready' ? 'Jugar' : 'Otra partida';
+        const status = document.getElementById('snake-status');
+        if (status) status.textContent = {
+          ready: 'Elige una dirección para comenzar.', playing: 'Los bordes conectan. Evita tu cuerpo.',
+          paused: 'Partida en pausa.', over: 'Fin de partida. Pulsa Otra partida o Espacio.', won: '¡Tablero completo! Ganaste.'
+        }[snakeState.phase];
+      }
       function resetSnakeGame() {
-        snakeState.x = 160;
-        snakeState.y = 160;
-        snakeState.cells = [];
-        snakeState.maxCells = 4;
-        snakeState.dx = snakeGrid;
-        snakeState.dy = 0;
-        snakeApple.x = getRandomSnakeInt(0, 25) * snakeGrid;
-        snakeApple.y = getRandomSnakeInt(0, 25) * snakeGrid;
-        snakeCount = 0;
-        updateSnakeScoreUI();
+        snakeState = { x: 160, y: 160, dx: 16, dy: 0, cells: [{ x: 160, y: 160 }, { x: 144, y: 160 }, { x: 128, y: 160 }, { x: 112, y: 160 }], maxCells: 4, phase: 'ready', turns: [] };
+        snakeElapsed = 0; snakeLastTime = 0;
+        spawnSnakeApple(); updateSnakeScoreUI(); drawSnakeGame();
       }
       window.resetSnakeGame = resetSnakeGame;
-
-      function snakeLoop() {
+      window.toggleSnakePause = function () {
         if (!isSnakeRunning) return;
-        snakeAnimId = requestAnimationFrame(snakeLoop);
-
-        if (++snakeCount < 4) {
+        if (snakeState.phase === 'over' || snakeState.phase === 'won') resetSnakeGame();
+        snakeState.phase = snakeState.phase === 'playing' ? 'paused' : 'playing';
+        snakeElapsed = 0; snakeLastTime = 0;
+        updateSnakeScoreUI(); drawSnakeGame();
+      };
+      function handleSnakeDirection(dir) {
+        if (!isSnakeRunning || !snakeDirections[dir] || ['paused', 'over', 'won'].includes(snakeState.phase)) return;
+        const next = snakeDirections[dir];
+        const previous = snakeState.turns.length ? snakeState.turns[snakeState.turns.length - 1] : [snakeState.dx, snakeState.dy];
+        if (next[0] === -previous[0] && next[1] === -previous[1]) return;
+        if (next[0] === previous[0] && next[1] === previous[1]) {
+          if (snakeState.phase === 'ready') { snakeState.phase = 'playing'; updateSnakeScoreUI(); }
           return;
         }
-        snakeCount = 0;
+        if (snakeState.turns.length >= 2) return;
+        snakeState.turns.push(next);
+        snakeState.phase = 'playing'; updateSnakeScoreUI();
+      }
+      function stepSnakeGame() {
+        if (snakeState.phase !== 'playing') return;
+        const turn = snakeState.turns.shift();
+        if (turn) [snakeState.dx, snakeState.dy] = turn;
+        const x = (snakeState.x + snakeState.dx + 400) % 400;
+        const y = (snakeState.y + snakeState.dy + 400) % 400;
+        const eating = snakeApple && x === snakeApple.x && y === snakeApple.y;
+        const body = eating ? snakeState.cells : snakeState.cells.slice(0, -1);
+        if (body.some(c => c.x === x && c.y === y)) {
+          snakeState.phase = 'over'; snakeState.turns.length = 0; updateSnakeScoreUI(); return;
+        }
+        snakeState.x = x; snakeState.y = y;
+        snakeState.cells.unshift({ x, y });
+        if (eating) { snakeState.maxCells++; spawnSnakeApple(); updateSnakeScoreUI(); }
+        else snakeState.cells.pop();
+      }
+      function drawSnakeGame() {
         if (!snakeCtx) return;
-
-        snakeCtx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
-
-        snakeState.x += snakeState.dx;
-        snakeState.y += snakeState.dy;
-
-        // Envoltura horizontal y vertical de pantalla
-        if (snakeState.x < 0) {
-          snakeState.x = snakeCanvas.width - snakeGrid;
-        } else if (snakeState.x >= snakeCanvas.width) {
-          snakeState.x = 0;
+        const ctx = snakeCtx;
+        ctx.imageSmoothingEnabled = false;
+        ctx.fillStyle = '#9bbc0f'; ctx.fillRect(0, 0, 400, 400);
+        ctx.fillStyle = '#8bac0f';
+        for (let y = 0; y < 400; y += 16) for (let x = 0; x < 400; x += 16) ctx.fillRect(x + 14, y + 14, 2, 2);
+        if (snakeApple) {
+          const { x, y } = snakeApple;
+          ctx.fillStyle = '#0f380f'; ctx.fillRect(x + 7, y, 2, 4); ctx.fillRect(x + 9, y, 4, 2);
+          ctx.fillRect(x + 2, y + 5, 12, 6); ctx.fillRect(x + 4, y + 3, 8, 11);
+          ctx.fillStyle = '#8bac0f'; ctx.fillRect(x + 4, y + 5, 2, 4);
         }
-        if (snakeState.y < 0) {
-          snakeState.y = snakeCanvas.height - snakeGrid;
-        } else if (snakeState.y >= snakeCanvas.height) {
-          snakeState.y = 0;
-        }
-
-        snakeState.cells.unshift({ x: snakeState.x, y: snakeState.y });
-        if (snakeState.cells.length > snakeState.maxCells) {
-          snakeState.cells.pop();
-        }
-
-        // Manzana
-        snakeCtx.fillStyle = '#ef4444';
-        snakeCtx.fillRect(snakeApple.x, snakeApple.y, snakeGrid - 1, snakeGrid - 1);
-
-        // Cuerpo de la serpiente
-        snakeCtx.fillStyle = '#22c55e';
-        snakeState.cells.forEach(function(cell, index) {
-          if (index === 0) {
-            snakeCtx.fillStyle = '#4ade80';
-          } else {
-            snakeCtx.fillStyle = '#16a34a';
-          }
-          snakeCtx.fillRect(cell.x, cell.y, snakeGrid - 1, snakeGrid - 1);
-
-          // Comer manzana
-          if (cell.x === snakeApple.x && cell.y === snakeApple.y) {
-            snakeState.maxCells++;
-            updateSnakeScoreUI();
-            snakeApple.x = getRandomSnakeInt(0, 25) * snakeGrid;
-            snakeApple.y = getRandomSnakeInt(0, 25) * snakeGrid;
-          }
-
-          // Colisión con el propio cuerpo
-          for (let i = index + 1; i < snakeState.cells.length; i++) {
-            if (cell.x === snakeState.cells[i].x && cell.y === snakeState.cells[i].y) {
-              resetSnakeGame();
-            }
+        snakeState.cells.forEach((cell, index) => {
+          ctx.fillStyle = '#0f380f'; ctx.fillRect(cell.x, cell.y, 16, 16);
+          ctx.fillStyle = index ? '#306230' : '#8bac0f'; ctx.fillRect(cell.x + 2, cell.y + 2, 12, 12);
+          if (index) { ctx.fillStyle = '#0f380f'; ctx.fillRect(cell.x + 4, cell.y + 4, 4, 4); }
+          else {
+            ctx.fillStyle = '#0f380f';
+            const horizontal = snakeState.dx !== 0;
+            const eyeX = snakeState.dx < 0 ? 3 : snakeState.dx > 0 ? 10 : 3;
+            const eyeY = snakeState.dy < 0 ? 3 : snakeState.dy > 0 ? 10 : 3;
+            ctx.fillRect(cell.x + eyeX, cell.y + eyeY, 3, 3);
+            ctx.fillRect(cell.x + (horizontal ? eyeX : 10), cell.y + (horizontal ? 10 : eyeY), 3, 3);
           }
         });
+        if (snakeState.phase !== 'playing') {
+          ctx.fillStyle = '#0f380f'; ctx.fillRect(36, 152, 328, 96);
+          ctx.fillStyle = '#9bbc0f'; ctx.fillRect(40, 156, 320, 88);
+          ctx.fillStyle = '#0f380f'; ctx.textAlign = 'center'; ctx.font = 'bold 28px monospace';
+          ctx.fillText({ ready: 'SNAKE / 8-BIT', paused: 'PAUSA', over: 'GAME OVER', won: '¡GANASTE!' }[snakeState.phase], 200, 190);
+          ctx.font = '14px monospace';
+          ctx.fillText(snakeState.phase === 'ready' ? 'FLECHAS / WASD / D-PAD' : 'PULSA EL BOTON O ESPACIO', 200, 218);
+        }
       }
-
+      function snakeLoop(timestamp) {
+        if (!isSnakeRunning) return;
+        snakeAnimId = requestAnimationFrame(snakeLoop);
+        const dt = snakeLastTime ? Math.min(200, timestamp - snakeLastTime) : 0;
+        snakeLastTime = timestamp;
+        if (snakeState.phase === 'playing') {
+          snakeElapsed += dt;
+          const interval = Math.max(70, 145 - Math.floor((snakeState.maxCells - 4) / 5) * 8);
+          while (snakeElapsed >= interval && snakeState.phase === 'playing') { snakeElapsed -= interval; stepSnakeGame(); }
+        } else snakeElapsed = 0;
+        drawSnakeGame();
+      }
       window.startSnakeGame = function () {
         if (isSnakeRunning) return;
-        isSnakeRunning = true;
+        isSnakeRunning = true; snakeLastTime = 0; snakeElapsed = 0;
         snakeAnimId = requestAnimationFrame(snakeLoop);
       };
-
       window.stopSnakeGame = function () {
-        isSnakeRunning = false;
-        if (snakeAnimId) {
-          cancelAnimationFrame(snakeAnimId);
-          snakeAnimId = null;
-        }
+        isSnakeRunning = false; snakeLastTime = 0; snakeElapsed = 0;
+        if (snakeAnimId !== null) cancelAnimationFrame(snakeAnimId);
+        snakeAnimId = null;
       };
 
       window.launchSnakeGame = function () {
@@ -13338,7 +13379,7 @@
 
         if (netGameSnakeView) netGameSnakeView.style.display = 'flex';
         if (netBrowserUrl) netBrowserUrl.value = 'http://www.juegosfuckyeah.com/juegos/snake.html';
-        if (netStatusLeft) netStatusLeft.textContent = 'Ejecutando SNAKE - 60 FPS';
+        if (netStatusLeft) netStatusLeft.textContent = 'SNAKE 8-BIT - Flechas / WASD / D-pad - P: pausa';
         if (netWindowTitle) netWindowTitle.textContent = '_internet - SNAKE [JuegosFuckYeah]';
 
         const viewport = document.getElementById('net-browser-viewport');
@@ -13348,38 +13389,18 @@
         window.startSnakeGame();
       };
 
-      function handleSnakeDirection(dir) {
-        if (!isSnakeRunning) return;
-        if (dir === 'LEFT' && snakeState.dx === 0) {
-          snakeState.dx = -snakeGrid;
-          snakeState.dy = 0;
-        } else if (dir === 'UP' && snakeState.dy === 0) {
-          snakeState.dy = -snakeGrid;
-          snakeState.dx = 0;
-        } else if (dir === 'RIGHT' && snakeState.dx === 0) {
-          snakeState.dx = snakeGrid;
-          snakeState.dy = 0;
-        } else if (dir === 'DOWN' && snakeState.dy === 0) {
-          snakeState.dy = snakeGrid;
-          snakeState.dx = 0;
-        }
-      }
-
       window.addEventListener('keydown', function(e) {
-        if (!isSnakeRunning) return;
-        if (e.key === 'ArrowLeft' || e.code === 'KeyA') {
-          e.preventDefault();
-          handleSnakeDirection('LEFT');
-        } else if (e.key === 'ArrowUp' || e.code === 'KeyW') {
-          e.preventDefault();
-          handleSnakeDirection('UP');
-        } else if (e.key === 'ArrowRight' || e.code === 'KeyD') {
-          e.preventDefault();
-          handleSnakeDirection('RIGHT');
-        } else if (e.key === 'ArrowDown' || e.code === 'KeyS') {
-          e.preventDefault();
-          handleSnakeDirection('DOWN');
-        }
+        if (!isSnakeRunning || e.target?.matches?.('input, textarea, select')) return;
+        const dir = { ArrowLeft: 'LEFT', KeyA: 'LEFT', ArrowRight: 'RIGHT', KeyD: 'RIGHT', ArrowUp: 'UP', KeyW: 'UP', ArrowDown: 'DOWN', KeyS: 'DOWN' }[e.code] || { ArrowLeft: 'LEFT', ArrowRight: 'RIGHT', ArrowUp: 'UP', ArrowDown: 'DOWN' }[e.key];
+        if (dir) { e.preventDefault(); handleSnakeDirection(dir); }
+        else if (e.code === 'Space' || e.code === 'KeyP') { e.preventDefault(); if (!e.repeat) toggleSnakePause(); }
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden && isSnakeRunning && snakeState.phase === 'playing') { snakeState.phase = 'paused'; updateSnakeScoreUI(); drawSnakeGame(); }
+        snakeLastTime = 0; snakeElapsed = 0;
+      });
+      window.addEventListener('blur', function () {
+        if (isSnakeRunning && snakeState.phase === 'playing') { snakeState.phase = 'paused'; updateSnakeScoreUI(); drawSnakeGame(); }
       });
 
       // Botones táctiles Snake

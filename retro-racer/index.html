@@ -1,247 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Retro Racer</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    body {
-      background: #000000;
-      color: #ffffff;
-      font-family: 'Courier New', Courier, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow: hidden;
-      touch-action: none;
-    }
-    #game-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100vh;
-      padding: 4px;
-      position: relative;
-    }
-    #canvas {
-      display: block;
-      background: #72D7EE;
-      width: 100%;
-      max-width: 480px;
-      max-height: calc(100vh - 120px);
-      aspect-ratio: 1 / 1;
-      border: 2px solid #3b82f6;
-      border-radius: 4px;
-      box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
-      object-fit: contain;
-      cursor: pointer;
-    }
-    .retro-touch-controls {
-      display: none; /* Oculto por defecto en PC */
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 460px;
-      margin-top: 6px;
-      padding: 2px 8px;
-    }
-    .touch-btn-cluster {
-      display: flex;
-      gap: 6px;
-    }
-    .touch-btn {
-      width: 48px;
-      height: 40px;
-      background: #1e293b;
-      color: #ffffff;
-      border: 1px solid #475569;
-      border-radius: 4px;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      touch-action: manipulation;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .touch-btn:active {
-      background: #3b82f6;
-      transform: scale(0.95);
-    }
-    .touch-nitro-btn {
-      width: auto;
-      min-width: 92px;
-      height: 40px;
-      padding: 0 10px;
-      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-      color: #ffffff;
-      border: 1.5px solid #ef4444;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.45);
-      transition: background 0.15s, box-shadow 0.15s, transform 0.08s;
-    }
-    .touch-nitro-btn:active {
-      background: #ea580c !important;
-      border-color: #fed7aa !important;
-      transform: scale(0.94);
-      box-shadow: 0 0 16px rgba(249, 115, 22, 0.9) !important;
-    }
-    .touch-hint {
-      font-size: 11px;
-      color: #94a3b8;
-      text-align: center;
-      margin-top: 2px;
-    }
-    .game-toolbar-mini {
-      position: absolute;
-      top: 6px;
-      right: 8px;
-      display: flex;
-      gap: 6px;
-      z-index: 10;
-    }
-    .mini-action-btn {
-      background: rgba(15, 23, 42, 0.85);
-      color: #cbd5e1;
-      border: 1px solid #334155;
-      padding: 3px 8px;
-      font-size: 11px;
-      font-family: inherit;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    .mini-action-btn:active {
-      background: #3b82f6;
-      color: #fff;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retro Racer — Coast Run</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#000;color:#f8f8e8;font-family:'Courier New',monospace}
+#game-container{width:100%;max-width:640px;margin:auto;padding:6px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.toolbar{width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:5px;background:#c0c0c0;padding:4px;border:2px solid;border-color:#fff #404040 #404040 #fff}
+button{font: bold 11px 'Courier New',monospace;min-height:30px;background:#c0c0c0;color:#000;border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:1px 1px #000;cursor:pointer;padding:4px 8px;touch-action:none;border-radius:0}
+button:active,button.pressed{border-color:#404040 #fff #fff #404040;background:#a0a0a0;box-shadow:inset 1px 1px #000}
+button:focus-visible{outline:2px dotted #000080;outline-offset:-5px}button:disabled{color:#707070;cursor:default}
+#canvas{display:block;width:100%;max-width:min(100%,calc(133.333vh - 254px));height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border:3px solid #c0c0c0;background:#302858;touch-action:manipulation;cursor:pointer}
+.retro-touch-controls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:5px}
+.retro-touch-controls button{min-height:46px;padding:4px 2px}
+#btn-touch-nitro{background:#e8b838}#btn-touch-nitro.boosting{background:#f89828}
+#race-status{font-size:12px;line-height:1.4;text-align:center;min-height:34px;margin:0;color:#d8d8d8}
+.hint{font-size:11px;color:#b8b8b8;text-align:center;line-height:1.4;margin:0}
+@media(max-width:360px){button{font-size:10px;padding:4px}#game-container{padding:4px}}
+</style>
 </head>
 <body>
-
-  <div id="game-container">
-    <div class="game-toolbar-mini">
-      <button class="mini-action-btn" id="btn-audio-toggle" type="button" title="Activar/Desactivar Sonido">🔊 Audio</button>
-      <button class="mini-action-btn" id="btn-reload-mini" type="button" onclick="location.reload()" title="Reiniciar">🔄 Reiniciar</button>
-    </div>
-
-    <canvas id="canvas" width="500" height="500"></canvas>
-
-    <div class="retro-touch-controls">
-      <div class="touch-btn-cluster">
-        <button class="touch-btn" id="btn-touch-left" type="button">◀</button>
-        <button class="touch-btn" id="btn-touch-right" type="button">▶</button>
-      </div>
-      <div class="touch-btn-cluster" style="flex-direction: column; gap: 4px;">
-        <button class="touch-btn touch-nitro-btn" id="btn-touch-nitro" type="button" title="Activar Nitro (3 segundos)">🔥 NITRO</button>
-        <button class="touch-btn touch-nitro-btn" id="btn-touch-shoot" type="button" style="background: linear-gradient(180deg, #ca8a04 0%, #a16207 100%); border-color:#eab308; box-shadow: 0 0 10px rgba(202, 138, 4, 0.45); min-width: 92px;" title="Disparar">🔫 DISPARO</button>
-      </div>
-      <div class="touch-btn-cluster">
-        <button class="touch-btn" id="btn-touch-down" type="button">⬇</button>
-        <button class="touch-btn" id="btn-touch-up" type="button">⬆</button>
-      </div>
-    </div>
-    <div class="touch-hint" id="keyboard-hint">🕹️ Controles PC: W, A, S, D / Flechas &bull; R: Nitro &bull; C: Disparar</div>
-  </div>
-
-  <div id="static-assets" style="display:none;">
-    <img id="carImage" src="assets/images/car.png" />
-    <img id="carTurnLeftImage" src="assets/images/car_turn_left.png" />
-    <img id="carTurnRightImage" src="assets/images/car_turn_right.png" />
-    <audio
-      id="music-background"
-      src="assets/sounds/The_Chip_Life_v1.0.mp3"
-      type="audio/mpeg"
-      autostart="0"
-      loop="true"
-    ></audio>
-  </div>
-
-  <script src="./src/main.js" type="module"></script>
-  <script>
-    function setupTouchBtn(btnId, direction) {
-      const btn = document.getElementById(btnId);
-      if (!btn) return;
-      const activate = (e) => {
-        e.preventDefault();
-        if (typeof window.startRetroRacerGame === 'function') window.startRetroRacerGame();
-        if (typeof window.setRetroKey === 'function') window.setRetroKey(direction, true);
-      };
-      const deactivate = (e) => {
-        e.preventDefault();
-        if (typeof window.setRetroKey === 'function') window.setRetroKey(direction, false);
-      };
-      btn.addEventListener('pointerdown', activate);
-      btn.addEventListener('pointerup', deactivate);
-      btn.addEventListener('pointercancel', deactivate);
-      btn.addEventListener('pointerleave', deactivate);
-    }
-    setupTouchBtn('btn-touch-left', 'LEFT');
-    setupTouchBtn('btn-touch-right', 'RIGHT');
-    setupTouchBtn('btn-touch-up', 'UP');
-    setupTouchBtn('btn-touch-down', 'DOWN');
-
-    const nitroTouchBtn = document.getElementById('btn-touch-nitro');
-    if (nitroTouchBtn) {
-      const fireNitro = (e) => {
-        e.preventDefault();
-        if (typeof window.startRetroRacerGame === 'function') window.startRetroRacerGame();
-        if (typeof window.triggerRetroNitro === 'function') window.triggerRetroNitro();
-      };
-      nitroTouchBtn.addEventListener('pointerdown', fireNitro);
-    }
-    
-    const shootTouchBtn = document.getElementById('btn-touch-shoot');
-    if (shootTouchBtn) {
-      const fireShoot = (e) => {
-        e.preventDefault();
-        if (typeof window.startRetroRacerGame === 'function') window.startRetroRacerGame();
-        if (typeof window.triggerRetroShoot === 'function') window.triggerRetroShoot();
-      };
-      shootTouchBtn.addEventListener('pointerdown', fireShoot);
-    }
-
-    const audioBtn = document.getElementById('btn-audio-toggle');
-    if (audioBtn) {
-      audioBtn.addEventListener('click', () => {
-        const audio = document.getElementById('music-background');
-        if (!audio) return;
-        if (audio.paused) {
-          audio.play().then(() => {
-            audioBtn.textContent = '🔊 Audio';
-          }).catch(() => {});
-        } else {
-          audio.pause();
-          audioBtn.textContent = '🔇 Silencio';
-        }
-      });
-    }
-
-    // Detectar si es móvil para mostrar controles táctiles
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-      const touchControls = document.querySelector('.retro-touch-controls');
-      if (touchControls) {
-        touchControls.style.display = 'flex';
-      }
-      const hint = document.getElementById('keyboard-hint');
-      if (hint) {
-        hint.innerHTML = '📱 Toca los botones para jugar &bull; Toca la pantalla para arrancar';
-      }
-    }
-  </script>
+<main id="game-container">
+<div class="toolbar">
+<button id="btn-start" type="button">Jugar</button>
+<button id="btn-pause" type="button">Pausa</button>
+<button id="btn-reload-mini" type="button">Reiniciar</button>
+<button id="btn-audio-toggle" type="button">Sonido: ON</button>
+</div>
+<canvas id="canvas" width="320" height="240" tabindex="0" aria-label="Retro Racer: flechas o WASD para conducir; R para nitro; P para pausa"></canvas>
+<div class="retro-touch-controls" aria-label="Controles de conducción">
+<button id="btn-touch-left" data-drive="left" type="button" aria-label="Girar a la izquierda">◀</button>
+<button id="btn-touch-right" data-drive="right" type="button" aria-label="Girar a la derecha">▶</button>
+<button id="btn-touch-down" data-drive="down" type="button">FRENO</button>
+<button id="btn-touch-up" data-drive="up" type="button">ACELERAR</button>
+<button id="btn-touch-nitro" type="button">NITRO [R]</button>
+</div>
+<p id="race-status" role="status"></p>
+<p class="hint">Mantén ACELERAR o W / ↑. A-D / ←-→: girar. S / ↓: frenar.<br>R: nitro (3 s) · P: pausa · Evita la banquina y el tráfico.</p>
+<audio id="music-background" src="assets/sounds/The_Chip_Life_v1.0.mp3" loop preload="none"></audio>
+</main>
+<script src="src/main.js" type="module"></script>
 </body>
 </html>
