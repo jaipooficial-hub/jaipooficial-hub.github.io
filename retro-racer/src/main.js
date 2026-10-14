@@ -1,10 +1,10 @@
 import { createRace, startRace, pauseRace, activateNitro, stepRace } from './race-model.js';
 import { input, bindControls, clearInput } from './arcade-controls.js';
-import { drawRace } from './arcade-view.js';
+import { drawRace, loadCarSprites } from './arcade-view.js';
 const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
 const audio = document.getElementById('music-background');
-let state = createRace(), lastTime = 0, accumulator = 0, best = 0;
-try { best = Math.max(0, Number(localStorage.getItem('axbyz-coast-best')) || 0); } catch (_) {}
+let state = createRace(), lastTime = 0, accumulator = 0, best = 0, assetsReady = false, assetError = '';
+try { best = Math.max(0, Number(localStorage.getItem('axbyz-racer-combat-best')) || 0); } catch (_) {}
 function music(play) {
   if (!audio) return;
   audio.volume = 0.2;
@@ -13,6 +13,7 @@ function music(play) {
 }
 function reset() { clearInput(); state = createRace(); accumulator = 0; lastTime = 0; music(false); updateUI(); }
 function start() {
+  if (!assetsReady || ['racing','countdown'].includes(state.phase)) return;
   if (['won','over'].includes(state.phase)) reset();
   if (state.phase === 'paused') pauseRace(state);
   else startRace(state);
@@ -22,17 +23,17 @@ function pause() { pauseRace(state); clearInput(); accumulator = 0; lastTime = 0
 function suspend() { if (['racing','countdown'].includes(state.phase)) pause(); }
 function updateUI() {
   const status = document.getElementById('race-status');
-  const descriptions = { ready: 'Llega a la meta antes de que termine el tiempo. Cada sector da +18 segundos.', countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'Curvas, tráfico y 4.8 km hasta la meta. R: nitro / P: pausa.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta alcanzada! Tiempo: '+state.elapsed.toFixed(1)+' s. Adelantamientos: '+state.overtakes+'.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
+  const descriptions = { ready: assetError || (!assetsReady ? 'Cargando los autos originales…' : 'Llega a la meta. Cada sector da +18 s. El auto acompaña las curvas; tú eliges el carril.'), countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'C / Espacio: disparar. R: nitro recargable. P: pausa.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta! '+state.elapsed.toFixed(1)+' s · '+state.overtakes+' adelantamientos · '+state.hits+' blancos.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
   if (status.textContent !== descriptions[state.phase]) status.textContent = descriptions[state.phase];
   const startBtn = document.getElementById('btn-start');
   const startLabel = ['won','over'].includes(state.phase) ? 'Otra carrera' : state.phase === 'paused' ? 'Continuar' : state.phase === 'ready' ? 'Jugar' : 'En carrera';
   if (startBtn.textContent !== startLabel) startBtn.textContent = startLabel;
-  startBtn.disabled = ['racing','countdown'].includes(state.phase);
+  startBtn.disabled = !assetsReady || ['racing','countdown'].includes(state.phase);
   document.getElementById('btn-pause').disabled = !['racing','countdown','paused'].includes(state.phase);
   document.getElementById('btn-pause').textContent = state.phase === 'paused' ? 'Continuar' : 'Pausa';
   const nitro = document.getElementById('btn-touch-nitro');
-  nitro.disabled = state.phase !== 'racing' || state.nitro > 0 || state.cooldown > 0;
-  const label = state.nitro > 0 ? 'NITRO '+state.nitro.toFixed(1) : state.cooldown > 0 ? 'RECARGA '+Math.ceil(state.cooldown) : 'NITRO [R]';
+  nitro.disabled = state.phase !== 'racing' || state.nitro > 0 || state.nitroCharge < 100;
+  const label = state.nitro > 0 ? 'NITRO '+state.nitro.toFixed(1) : state.nitroCharge < 100 ? 'CARGA '+Math.floor(state.nitroCharge)+'%' : 'NITRO [R]';
   if (nitro.textContent !== label) nitro.textContent = label;
   nitro.classList.toggle('boosting', state.nitro > 0);
 }
@@ -50,9 +51,10 @@ function frame(timestamp) {
   state.steerLeft = input.left; state.steerRight = input.right;
   if (state.phase === 'won' && !state.recordSaved) {
     state.recordSaved = true;
-    if (!best || state.elapsed < best) { best = state.elapsed; try { localStorage.setItem('axbyz-coast-best',String(best)); } catch (_) {} }
+    if (!best || state.elapsed < best) { best = state.elapsed; try { localStorage.setItem('axbyz-racer-combat-best',String(best)); } catch (_) {} }
     music(false);
   } else if (state.phase === 'over') music(false);
   drawRace(ctx,state,best); updateUI();
 }
 updateUI(); requestAnimationFrame(frame);
+loadCarSprites().then(() => { assetsReady = true; updateUI(); }).catch(error => { assetError = error.message; updateUI(); });

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Retro Racer — Coast Run</title>
+<title>Retro Racer — AxByZ OS</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#000;color:#f8f8e8;font-family:'Courier New',monospace}
 #game-container{width:100%;max-width:640px;margin:auto;padding:6px;display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -11,12 +11,14 @@
 button{font: bold 11px 'Courier New',monospace;min-height:30px;background:#c0c0c0;color:#000;border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:1px 1px #000;cursor:pointer;padding:4px 8px;touch-action:none;border-radius:0}
 button:active,button.pressed{border-color:#404040 #fff #fff #404040;background:#a0a0a0;box-shadow:inset 1px 1px #000}
 button:focus-visible{outline:2px dotted #000080;outline-offset:-5px}button:disabled{color:#707070;cursor:default}
-#canvas{display:block;width:100%;max-width:min(100%,calc(133.333vh - 254px));height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border:3px solid #c0c0c0;background:#302858;touch-action:manipulation;cursor:pointer}
-.retro-touch-controls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:5px}
+#canvas{display:block;width:100%;max-width:min(100%,calc(133.333vh - 290px));height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border:3px solid #c0c0c0;background:#302858;touch-action:manipulation;cursor:pointer}
+.retro-touch-controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));width:100%;gap:5px}
 .retro-touch-controls button{min-height:46px;padding:4px 2px}
 #btn-touch-nitro{background:#e8b838}#btn-touch-nitro.boosting{background:#f89828}
+#btn-touch-fire{background:#e89070}.credits{font-size:10px;text-align:center;color:#999}.credits a{color:#9acfff}
 #race-status{font-size:12px;line-height:1.4;text-align:center;min-height:34px;margin:0;color:#d8d8d8}
 .hint{font-size:11px;color:#b8b8b8;text-align:center;line-height:1.4;margin:0}
+@media(max-width:480px){.retro-touch-controls{grid-template-columns:repeat(4,minmax(0,1fr))}#btn-touch-fire,#btn-touch-nitro{grid-column:span 2}#canvas{max-width:min(100%,calc(133.333vh - 400px))}}
 @media(max-width:360px){button{font-size:10px;padding:4px}#game-container{padding:4px}}
 </style>
 </head>
@@ -28,18 +30,20 @@ button:focus-visible{outline:2px dotted #000080;outline-offset:-5px}button:disab
 <button id="btn-reload-mini" type="button">Reiniciar</button>
 <button id="btn-audio-toggle" type="button">Sonido: ON</button>
 </div>
-<canvas id="canvas" width="320" height="240" tabindex="0" aria-label="Retro Racer: flechas o WASD para conducir; R para nitro; P para pausa"></canvas>
+<canvas id="canvas" width="320" height="240" tabindex="0" aria-label="Retro Racer: flechas o WASD para conducir; C o espacio para disparar; R para nitro; P para pausa"></canvas>
 <div class="retro-touch-controls" aria-label="Controles de conducción">
 <button id="btn-touch-left" data-drive="left" type="button" aria-label="Girar a la izquierda">◀</button>
 <button id="btn-touch-right" data-drive="right" type="button" aria-label="Girar a la derecha">▶</button>
 <button id="btn-touch-down" data-drive="down" type="button">FRENO</button>
 <button id="btn-touch-up" data-drive="up" type="button">ACELERAR</button>
+<button id="btn-touch-fire" data-drive="fire" type="button">FUEGO [C]</button>
 <button id="btn-touch-nitro" type="button">NITRO [R]</button>
 </div>
 <p id="race-status" role="status"></p>
-<p class="hint">Mantén ACELERAR o W / ↑. A-D / ←-→: girar. S / ↓: frenar.<br>R: nitro (3 s) · P: pausa · Evita la banquina y el tráfico.</p>
-<audio id="music-background" src="assets/sounds/The_Chip_Life_v1.0.mp3" loop preload="none"></audio>
+<p class="hint">W / ↑: acelerar · A-D / ←-→: carril · S / ↓: frenar.<br>C / Espacio: disparar · R: nitro 3 s / recarga 8 s · P: pausa.</p>
+<div class="credits">Basado en <a href="https://github.com/simondiep/retro-racer" target="_blank" rel="noopener noreferrer">Retro Racer de simondiep</a> · Música: Josh Penn-Pierson</div>
+<audio id="music-background" src="/retro-racer/assets/sounds/The_Chip_Life_v1.0.mp3" loop preload="none"></audio>
 </main>
-<script src="src/main.js" type="module"></script>
+<script src="/retro-racer/src/main.js" type="module"></script>
 </body>
 </html>
