@@ -6703,6 +6703,8 @@
                   <span>VEL: <span id="bomberman-speed-val" style="color:#68b8f8;">1.0x</span></span>
                   <span>—</span>
                   <span>FUEGO: <span id="bomberman-fire-val" style="color:#f87171;">3</span></span>
+                  <span>VIDAS: <span id="bomberman-lives-val" style="color:#f8d878;">3</span></span>
+                  <span>ENEMIGOS: <span id="bomberman-enemies-val" style="color:#f85898;">3</span></span>
                 </div>
                 <div class="pong-controls-actions" style="width: auto;">
                   <button class="pong-action-btn" onclick="resetBombermanGame()">
@@ -6715,6 +6717,7 @@
             <div class="bomberman-canvas-container">
               <canvas width="960" height="832" id="bomberman-game" tabindex="0" style="outline: none; cursor: pointer;"></canvas>
             </div>
+            <div id="bomberman-status" role="status" style="max-width:520px; color:#c0c0c0; font:12px monospace; text-align:center; margin:4px 0;">Elimina a los 3 enemigos con bombas. Tienes 3 vidas.</div>
 
             <!-- Controles Minimalistas OldWeb D-Pad para Celular y PC -->
             <div class="bomberman-oldweb-controls" id="bomberman-oldweb-controls">
@@ -12389,6 +12392,10 @@
       let bombEntities = [];
       let bombCells = [];
       let bombermanFloatingTexts = [];
+      let bombermanEnemies = [];
+      let bombermanLives = 3;
+      let bombermanVictory = false;
+      let bombermanGrace = 6000;
 
       const bombTemplate = [
         ['▉','▉','▉','▉','▉','▉','▉','▉','▉','▉','▉','▉','▉','▉','▉'],
@@ -12411,7 +12418,7 @@
         for (let row = 0; row < bombNumRows; row++) {
           bombCells[row] = [];
           for (let col = 0; col < bombNumCols; col++) {
-            if (!bombTemplate[row][col] && Math.random() < 0.88) {
+            if (!bombTemplate[row][col] && Math.random() < 0.65) {
               bombCells[row][col] = bombTypes.softWall;
             } else if (bombTemplate[row][col] === bombTypes.wall) {
               bombCells[row][col] = bombTypes.wall;
@@ -12647,6 +12654,7 @@
         },
         render() {
           if (!bombermanCtx) return;
+          if (this.alive && this.invulnerable > 0 && Math.floor(this.invulnerable / 140) % 2) return;
           const x = this.x;
           const y = this.y;
           if (!this.alive) {
@@ -12666,6 +12674,155 @@
         }
       };
 
+      const bomberEnemySprite = [
+        '................','.....oooooo.....','...ooppppppoo...','..oppppppppppo..',
+        '..oppsppppsspo..','.oppppppppppppo.','.opowwoppowwopo.','.opowkoppowkopo.',
+        '.opowwoppowwopo.','.oppppppppppppo.','..opppoooopppo..','..oppppppppppo..',
+        '...oppppppppo...','...ooopppooo....','..oppoppoppopo..','...oo..oo..oo...'
+      ];
+      const bomberEnemyDirections = [
+        { row: -1, col: 0, name: 'up' }, { row: 1, col: 0, name: 'down' },
+        { row: 0, col: -1, name: 'left' }, { row: 0, col: 1, name: 'right' }
+      ];
+      function spawnBombermanEnemies() {
+        bombermanEnemies = [[1, 13], [11, 13], [11, 1]].map(([row, col], i) => {
+          for (const d of [{row:0,col:0}, ...bomberEnemyDirections]) {
+            const r = row + d.row, c = col + d.col;
+            if (bombCells[r] && bombCells[r][c] !== bombTypes.wall) bombCells[r][c] = null;
+          }
+          return { row, col, x: (col + 0.5) * bombGrid, y: (row + 0.5) * bombGrid,
+            alive: true, target: null, speed: 108 - i * 6, wait: 1800 + i * 250,
+            reaction: 220 + i * 60, alert: false, reactionLeft: 0, facing: 'down', anim: 0,
+            color: ['#68b8e8', '#c878d8', '#f8b848'][i] };
+        });
+      }
+      function getBomberBlastCells(bomb) {
+        const cells = [{ row: bomb.row, col: bomb.col }];
+        for (const dir of bomberEnemyDirections) {
+          for (let i = 1; i < bomb.size; i++) {
+            const row = bomb.row + dir.row * i, col = bomb.col + dir.col * i;
+            if (!bombCells[row] || col < 0 || col >= bombNumCols || bombCells[row][col] === bombTypes.wall) break;
+            cells.push({ row, col });
+            if (bombCells[row][col] === bombTypes.softWall || bombCells[row][col] === bombTypes.bomb) break;
+          }
+        }
+        return cells;
+      }
+      function getBomberDangerMap() {
+        const danger = new Map();
+        const bombs = bombEntities.filter(e => e.alive && e.type === bombTypes.bomb);
+        const times = bombs.map(b => Math.max(0, b.timer));
+        const blasts = bombs.map(getBomberBlastCells);
+        // Predice detonaciones encadenadas: la bomba alcanzada hereda la mecha más corta.
+        for (let pass = 0; pass < bombs.length; pass++) {
+          for (let i = 0; i < bombs.length; i++) for (let j = 0; j < bombs.length; j++) {
+            if (times[j] > times[i] && blasts[i].some(c => c.row === bombs[j].row && c.col === bombs[j].col)) times[j] = times[i];
+          }
+        }
+        const add = (row, col, start, end) => {
+          const key = row + ',' + col;
+          if (!danger.has(key)) danger.set(key, []);
+          danger.get(key).push({ start, end });
+        };
+        bombs.forEach((bomb, i) => blasts[i].forEach(c => add(c.row, c.col, times[i], times[i] + 420)));
+        bombEntities.forEach(e => { if (e instanceof BombExplosion && e.alive) add(e.row, e.col, 0, e.timer + 100); });
+        return danger;
+      }
+      function canBomberEnemyEnter(row, col, enemy) {
+        if (isWallAt(row, col) || bombCells[row]?.[col] === bombTypes.bomb) return false;
+        return !bombermanEnemies.some(e => e !== enemy && e.alive &&
+          ((e.row === row && e.col === col) || (e.target && e.target.row === row && e.target.col === col)));
+      }
+      function bomberEnemySafeAt(danger, row, col, arrival, stay = 600) {
+        return !(danger.get(row + ',' + col) || []).some(h => arrival + stay >= h.start - 100 && arrival <= h.end);
+      }
+      function findBomberEnemyPath(enemy, danger, escape, goal) {
+        const queue = [{ row: enemy.row, col: enemy.col, depth: 0, first: null }];
+        const visited = new Set([enemy.row + ',' + enemy.col]);
+        const travel = bombGrid / enemy.speed * 1000;
+        for (let index = 0; index < queue.length; index++) {
+          const node = queue[index];
+          if (node.first && (escape
+            ? bomberEnemySafeAt(danger, node.row, node.col, node.depth * travel, 3200)
+            : node.row === goal.row && node.col === goal.col)) return node.first;
+          if (node.depth >= 10) continue;
+          for (const dir of bomberEnemyDirections) {
+            const row = node.row + dir.row, col = node.col + dir.col, key = row + ',' + col;
+            if (visited.has(key) || !canBomberEnemyEnter(row, col, enemy)) continue;
+            if (!bomberEnemySafeAt(danger, row, col, (node.depth + 1) * travel, travel)) continue;
+            visited.add(key);
+            queue.push({ row, col, depth: node.depth + 1, first: node.first || { row, col, facing: dir.name } });
+          }
+        }
+        return null;
+      }
+      function hurtBomberPlayer() {
+        if (!bombPlayer.alive || bombermanVictory || bombPlayer.invulnerable > 0) return;
+        bombermanLives = Math.max(0, bombermanLives - 1);
+        if (!bombermanLives) { bombPlayer.alive = false; return; }
+        bombPlayer.currRow = bombPlayer.targetRow = 1;
+        bombPlayer.currCol = bombPlayer.targetCol = 1;
+        bombPlayer.x = bombPlayer.y = 1.5 * bombGrid;
+        bombPlayer.isMoving = false; bombPlayer.moveDir = null;
+        bombPlayer.invulnerable = 3200;
+        activeCardinals.length = 0; setDpadDirection(null);
+        spawnFloatingText('PROTECCION', bombPlayer.x, bombPlayer.y - 32, '#f8d878');
+      }
+      function updateBombermanEnemies(dt) {
+        if (!bombPlayer.alive || bombermanVictory) return;
+        bombermanGrace = Math.max(0, bombermanGrace - dt);
+        const danger = getBomberDangerMap();
+        const flames = bombEntities.filter(e => e instanceof BombExplosion && e.alive);
+        for (const enemy of bombermanEnemies) {
+          if (!enemy.alive) continue;
+          const inDanger = danger.has(enemy.row + ',' + enemy.col);
+          if (inDanger && !enemy.alert) enemy.reactionLeft = enemy.reaction;
+          enemy.alert = inDanger;
+          enemy.reactionLeft = Math.max(0, enemy.reactionLeft - dt);
+          enemy.wait = Math.max(0, enemy.wait - dt);
+          if (!enemy.target && !enemy.wait && !enemy.reactionLeft) {
+            let target = inDanger ? findBomberEnemyPath(enemy, danger, true, null) : null;
+            const distance = Math.abs(enemy.row - bombPlayer.currRow) + Math.abs(enemy.col - bombPlayer.currCol);
+            if (!target && !inDanger && !bombermanGrace && distance <= 6 && Math.random() < 0.45) {
+              target = findBomberEnemyPath(enemy, danger, false, { row: bombPlayer.currRow, col: bombPlayer.currCol });
+            }
+            if (!target) {
+              const options = bomberEnemyDirections.map(d => ({ row: enemy.row + d.row, col: enemy.col + d.col, facing: d.name }))
+                .filter(c => canBomberEnemyEnter(c.row, c.col, enemy) && bomberEnemySafeAt(danger, c.row, c.col, bombGrid / enemy.speed * 1000, 1000));
+              const forward = options.filter(c => c.facing === enemy.facing);
+              target = forward.length && Math.random() < 0.6 ? forward[0] : options[Math.floor(Math.random() * options.length)];
+            }
+            if (target) { enemy.target = target; enemy.facing = target.facing; }
+            else enemy.wait = 200;
+          }
+          if (enemy.target) {
+            // Si aparece una bomba en el destino, vuelve al centro anterior sin atravesarla.
+            if (bombCells[enemy.target.row]?.[enemy.target.col] === bombTypes.bomb) enemy.target = { row: enemy.row, col: enemy.col, facing: enemy.facing };
+            const x = (enemy.target.col + 0.5) * bombGrid, y = (enemy.target.row + 0.5) * bombGrid;
+            const dx = x - enemy.x, dy = y - enemy.y, distance = Math.hypot(dx, dy), step = enemy.speed * dt / 1000;
+            if (distance <= step) {
+              enemy.x = x; enemy.y = y; enemy.row = enemy.target.row; enemy.col = enemy.target.col;
+              enemy.target = null; enemy.wait = 90;
+            } else { enemy.x += dx / distance * step; enemy.y += dy / distance * step; }
+            enemy.anim += dt;
+          }
+          if (flames.some(f => checkCircleBoxCollision(enemy.x, enemy.y, 15, f.row, f.col))) {
+            enemy.alive = false; spawnFloatingText('ELIMINADO', enemy.x, enemy.y - 24, enemy.color); continue;
+          }
+          if (!bombermanGrace && Math.hypot(enemy.x - bombPlayer.x, enemy.y - bombPlayer.y) < 30) hurtBomberPlayer();
+        }
+        if (bombPlayer.alive && bombermanEnemies.length && bombermanEnemies.every(e => !e.alive)) bombermanVictory = true;
+      }
+      function renderBombermanEnemies() {
+        for (const enemy of bombermanEnemies) {
+          if (!enemy.alive) continue;
+          const sprite = bomberEnemySprite.slice();
+          if (Math.floor(enemy.anim / 180) % 2) sprite[15] = '..oo..oo..oo....';
+          drawBomberSprite(bombermanCtx, sprite, enemy.x - 24, enemy.y - 24, 3, enemy.facing === 'right',
+            { ...bomberPalette, p: enemy.color, s: '#f8f8e8' });
+        }
+      }
+
       function updateBombermanUI() {
         if (bombermanBombsCountElem) {
           const activeBombs = bombEntities.filter(e => e.type === bombTypes.bomb && e.owner === bombPlayer).length;
@@ -12678,6 +12835,15 @@
         if (bombermanFireValElem) {
           bombermanFireValElem.textContent = String(bombPlayer.bombSize);
         }
+        const lives = document.getElementById('bomberman-lives-val');
+        const enemies = document.getElementById('bomberman-enemies-val');
+        const status = document.getElementById('bomberman-status');
+        if (lives) lives.textContent = String(bombermanLives);
+        if (enemies) enemies.textContent = String(bombermanEnemies.filter(e => e.alive).length);
+        if (status) status.textContent = bombermanVictory ? '¡Victoria! Eliminaste a todos los enemigos.'
+          : !bombPlayer.alive ? 'Fin de partida. Pulsa Reiniciar para volver a jugar.'
+          : bombPlayer.invulnerable > 0 ? 'Protección activa: aprovecha para alejarte del peligro.'
+          : 'Elimina a los 3 enemigos con bombas. Evita tocarlos.';
       }
 
       function spawnFloatingText(text, x, y, color) {
@@ -12782,7 +12948,7 @@
       }
 
       function updateBombermanGridMovement(dt) {
-        if (!isBombermanRunning || !bombPlayer.alive) return;
+        if (!isBombermanRunning || !bombPlayer.alive || bombermanVictory) return;
 
         const frameScale = Math.min(2.5, dt / 16.666);
         let remainingMove = bombPlayer.speed * frameScale;
@@ -12877,7 +13043,7 @@
       }
 
       function placeBombermanBomb() {
-        if (!isBombermanRunning || !bombPlayer.alive) return;
+        if (!isBombermanRunning || !bombPlayer.alive || bombermanVictory) return;
         const r = Math.floor(bombPlayer.y / bombGrid);
         const c = Math.floor(bombPlayer.x / bombGrid);
         if (r < 0 || r >= bombNumRows || c < 0 || c >= bombNumCols) return;
@@ -12909,6 +13075,8 @@
         }
         const dt = Math.min(100, timestamp - bombermanLastTimestamp);
         bombermanLastTimestamp = timestamp;
+        const active = bombPlayer.alive && !bombermanVictory;
+        bombPlayer.invulnerable = Math.max(0, (bombPlayer.invulnerable || 0) - (active ? dt : 0));
 
         // Actualizar movimiento fluido por cuadrícula a velocidad constante
         updateBombermanGridMovement(dt);
@@ -12933,20 +13101,23 @@
 
         // Actualizar y dibujar entidades (Bombas, Explosiones, Poderes)
         bombEntities.forEach((entity) => {
-          entity.update(dt);
-          entity.render();
+          if (active && entity.alive) entity.update(dt);
+          if (entity.alive) entity.render();
         });
+
+        if (active) updateBombermanEnemies(dt);
 
         // Verificar si las llamas alcanzan al jugador
         bombEntities.forEach((entity) => {
-          if (entity instanceof BombExplosion && bombPlayer.alive) {
+          if (entity instanceof BombExplosion && entity.alive && bombPlayer.alive && !bombermanVictory) {
             if (checkCircleBoxCollision(bombPlayer.x, bombPlayer.y, bombPlayer.radius * 0.85, entity.row, entity.col)) {
-              bombPlayer.alive = false;
+              hurtBomberPlayer();
             }
           }
         });
 
         bombEntities = bombEntities.filter((entity) => entity.alive);
+        renderBombermanEnemies();
         bombPlayer.render();
 
         // Renderizar textos flotantes de power-ups
@@ -12972,13 +13143,13 @@
 
         updateBombermanUI();
 
-        if (!bombPlayer.alive) {
+        if (!bombPlayer.alive || bombermanVictory) {
           bombermanCtx.fillStyle = 'rgba(0,0,0,0.65)';
           bombermanCtx.fillRect(0, 0, bombermanCanvas.width, bombermanCanvas.height);
-          bombermanCtx.fillStyle = '#ff4444';
+          bombermanCtx.fillStyle = bombermanVictory ? '#f8d878' : '#ff4444';
           bombermanCtx.font = 'bold 40px "Courier New", monospace';
           bombermanCtx.textAlign = 'center';
-          bombermanCtx.fillText('GAME OVER', bombermanCanvas.width / 2, bombermanCanvas.height / 2 - 20);
+          bombermanCtx.fillText(bombermanVictory ? '¡VICTORIA!' : 'GAME OVER', bombermanCanvas.width / 2, bombermanCanvas.height / 2 - 20);
           bombermanCtx.fillStyle = '#ffffff';
           bombermanCtx.font = '20px "Courier New", monospace';
           bombermanCtx.fillText('Pulsa [Reiniciar] para volver a jugar', bombermanCanvas.width / 2, bombermanCanvas.height / 2 + 30);
@@ -12992,7 +13163,12 @@
         activeCardinals.length = 0;
         setDpadDirection(null);
         bombPlayer.reset();
+        bombPlayer.invulnerable = 0;
+        bombermanLives = 3;
+        bombermanVictory = false;
+        bombermanGrace = 6000;
         generateBombermanLevel();
+        spawnBombermanEnemies();
         updateBombermanUI();
       };
 
