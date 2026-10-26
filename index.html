@@ -5816,7 +5816,7 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
 #net-games-catalog .catalog-search svg{flex:none;color:#a4afc1;width:20px;height:20px}
 #net-games-catalog #catalog-search{width:100%;min-width:0;border:0;outline:0;padding:12px 0;font:16px Arial,sans-serif;color:#f5f7fa;background:none;box-shadow:none;min-height:46px}
 #net-games-catalog #catalog-search::placeholder{color:#8e99ad}
-#net-games-catalog .catalog-clear{border:0;background:none;color:#b7c0cf;width:28px;min-height:40px;cursor:pointer;font:22px Arial;padding:0;box-shadow:none}
+#net-games-catalog .catalog-clear{border:0;background:none;color:#b7c0cf;width:44px;min-height:44px;flex:none;cursor:pointer;font:22px Arial;padding:0;box-shadow:none}
 #net-games-catalog .catalog-latest{display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:#f5f7fb;font-family:Arial,sans-serif;min-width:0}
 #net-games-catalog .catalog-latest-cover{width:64px;height:64px;flex:none;border:2px solid #080b10;border-radius:8px;box-shadow:0 0 0 1px #5b6475}
 #net-games-catalog .catalog-latest-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -5855,7 +5855,8 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
 #net-games-catalog .catalog-online{display:inline-flex;align-items:center;gap:6px;color:#aab8c9}
 #net-games-catalog .catalog-online::before{content:'';width:6px;height:6px;border-radius:50%;background:#8cbd78}
 #net-games-catalog button:focus-visible,#net-games-catalog a:focus-visible{outline:2px solid #ffad59;outline-offset:4px}
-#net-games-catalog button.is-pressed{filter:brightness(.85)}
+#net-games-catalog .is-pressed{filter:brightness(.85)}
+#catalog-search::-webkit-search-cancel-button{-webkit-appearance:none}
 @container arcade (max-width:760px){#net-games-catalog .catalog-masthead{grid-template-columns:1fr 1fr;gap:18px}#net-games-catalog .catalog-search{grid-column:1/-1;grid-row:2}#net-games-catalog .catalog-latest{justify-self:end}#net-games-catalog .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#net-games-catalog .catalog-tab{font-size:12px;gap:5px}#net-games-catalog .catalog-tab span:first-child{font-size:16px}}
 @container arcade (max-width:520px){#net-games-catalog .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}#net-games-catalog .catalog-categories{grid-template-columns:repeat(3,minmax(0,1fr))}#net-games-catalog .catalog-tab{min-height:45px;font-size:12px}#net-games-catalog .catalog-brand-main{font-size:37px}#net-games-catalog .catalog-brand-sub{font-size:18px;letter-spacing:.7px}#net-games-catalog .catalog-latest-cover{width:46px;height:46px}#net-games-catalog .catalog-latest small{display:none}#net-games-catalog .catalog-latest strong{font-size:12px}#net-games-catalog .catalog-latest-tag{font-size:8px;letter-spacing:0}#net-games-catalog .catalog-masthead{gap:17px 12px}#net-games-catalog .catalog-heading h2{font-size:17px}#net-games-catalog .catalog-game-name{font-size:14px}#net-games-catalog .catalog-footer{font-size:10px}}
 @media(max-width:600px){body #net-games-catalog.catalog-shell,body.mode-mobile #net-games-catalog.catalog-shell{padding:20px 16px 28px;gap:22px}}
