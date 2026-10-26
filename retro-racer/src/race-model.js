@@ -73,8 +73,14 @@ export function stepRace(s, input, dt, random = Math.random) {
     if (s.nitroCharge > 100 - 1e-8) s.nitroCharge = 100;
   }
   const boost = s.nitro > 0;
-  const accel = input.down ? -95 : boost ? 150 : input.up ? 90 : -12;
-  s.speed = Math.max(0, Math.min(boost ? NITRO_MAX_SPEED : MAX_SPEED, s.speed + accel * dt));
+  const boostMomentum = !boost && s.speed > MAX_SPEED;
+  // Preserve turbo momentum after the charge expires. Throttle cannot add speed
+  // above the normal limit; drag brings it back over about three seconds.
+  const accel = input.down ? -95 : boost ? 110
+    : boostMomentum ? (input.up ? -12 : -18) : input.up ? 65 : -12;
+  const limit = boost || boostMomentum ? NITRO_MAX_SPEED : MAX_SPEED;
+  const floor = boostMomentum && input.up && !input.down ? MAX_SPEED : 0;
+  s.speed = Math.max(floor, Math.min(limit, s.speed + accel * dt));
   const steering = Number(!!input.right) - Number(!!input.left);
   // Smooth yaw in simulation time, independent of the display refresh rate.
   const targetTurn = carTurn(s, steering);
