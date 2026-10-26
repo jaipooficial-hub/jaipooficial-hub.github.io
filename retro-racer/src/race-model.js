@@ -75,9 +75,10 @@ export function stepRace(s, input, dt, random = Math.random) {
   const boost = s.nitro > 0;
   const boostMomentum = !boost && s.speed > MAX_SPEED;
   // Preserve turbo momentum after the charge expires. Throttle cannot add speed
-  // above the normal limit; drag brings it back over about three seconds.
+  // above the normal limit. After three seconds it still carries ~330 km/h;
+  // the remaining momentum fades naturally instead of hitting a timed cap.
   const accel = input.down ? -95 : boost ? 110
-    : boostMomentum ? (input.up ? -12 : -18) : input.up ? 65 : -12;
+    : boostMomentum ? (input.up ? -4.5 : -7.5) : input.up ? 65 : -12;
   const limit = boost || boostMomentum ? NITRO_MAX_SPEED : MAX_SPEED;
   const floor = boostMomentum && input.up && !input.down ? MAX_SPEED : 0;
   s.speed = Math.max(floor, Math.min(limit, s.speed + accel * dt));

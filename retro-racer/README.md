@@ -15,7 +15,8 @@ El bucle original se sustituye por una simulación fija de 60 pasos por segundo.
 - Botones con pulsación sostenida, multitáctil y captura de puntero.
 - Máximo normal de 250 km/h y de 380 km/h con nitro. Aceleración de 0–250 km/h
   en unos 1.1 s y de 250–380 km/h en 0.33 s; frenado reforzado. Al terminar
-  el nitro, la inercia baja de 380 a 250 km/h en unos 3 s con el acelerador;
+  el nitro, conserva unos 330 km/h tras 3 s con el acelerador y sigue bajando
+  gradualmente hasta 250 km/h (unos 8 s en total, sin frenar ni chocar);
   al soltarlo decae más rápido y el freno permite reducirla inmediatamente.
   Salida de 1 s, 30 autos y colisiones.
 - Tres sectores, 4.8 km; cada checkpoint añade 18 s. Récord local de esta variante.
