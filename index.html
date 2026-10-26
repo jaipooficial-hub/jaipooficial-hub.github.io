@@ -5074,7 +5074,7 @@
       max-width: 440px;
       max-height: 120px;
       margin-bottom: 18px;
-      transform: translateY(-12px);
+      transform: translateY(-32px);
     }
 
     body.mode-pc #desktop-brand-center .brand-wallpaper {
@@ -5117,7 +5117,7 @@
       max-width: 260px;
       max-height: 75px;
       margin-bottom: 10px;
-      transform: translateY(-6px);
+      transform: translateY(clamp(-64px, -7vh, -36px));
     }
 
     body.mode-mobile #desktop-brand-center .brand-wallpaper {
@@ -5190,11 +5190,16 @@
     }
 
     body.mode-mobile #desktop-icons-container {
-      top: 50%;
+      top: calc(50% - 72px);
       left: 10px;
-      transform: translateY(-50%);
-      --stagger-step: 8px;
-      gap: 7px;
+      transform: none;
+      --stagger-step: clamp(14px, 5vw, 22px);
+      gap: 10px;
+    }
+
+    body.mode-mobile #desktop-icons-container > .desktop-icon {
+      height: 44px;
+      flex-shrink: 0;
     }
 
     body.mode-mobile .desktop-icon {
