@@ -1,0 +1,78 @@
+{
+  "updated": "2026-10-26",
+  "processing": "Redimensionado y compresión WebP sin IA. Sin redibujado, relleno generativo ni generación de imágenes.",
+  "images": [
+    {
+      "key": "racer",
+      "title": "Out Run — Master System",
+      "kind": "Escaneo de la portada original",
+      "credit": "SEGA",
+      "page": "https://www.pricecharting.com/game/pal-sega-master-system/out-run",
+      "image": "https://storage.googleapis.com/images.pricecharting.com/3f7c43e7c6bb7f58f05d7292d81afbae91a70879650fff464267c40846e05cd7/1600.jpg",
+      "file": "/portal/covers/racer.webp"
+    },
+    {
+      "key": "bomberman",
+      "title": "Super Bomberman 2 — SNES",
+      "kind": "Portada original de la serie Bomberman",
+      "credit": "Hudson Soft",
+      "page": "https://thegamesdb.net/game.php?id=2534",
+      "image": "https://cdn.thegamesdb.net/images/original/boxart/front/2534-1.jpg",
+      "file": "/portal/covers/bomberman.webp"
+    },
+    {
+      "key": "invaders",
+      "title": "Space Invaders",
+      "kind": "Cartel promocional clásico",
+      "credit": "Taito",
+      "page": "https://www.bbc.co.uk/news/resources/idt-sh/top_scores_video_game_music",
+      "image": "https://news.files.bbci.co.uk/include/shorthand/42855/media/1200space-invaders-b_m9dao9n-lr_w0o2vxt.jpg",
+      "file": "/portal/covers/invaders.webp"
+    },
+    {
+      "key": "pinball",
+      "title": "3D Pinball for Windows — Space Cadet",
+      "kind": "Captura del juego para Windows",
+      "credit": "Microsoft / Cinematronics / Maxis",
+      "page": "https://www.windowscentral.com/software-apps/this-90s-pc-game-is-the-secret-to-my-solid-typing",
+      "image": "https://cdn.mos.cms.futurecdn.net/VmBUfaTedmmFH6LeXFxXrA.jpg",
+      "file": "/portal/covers/pinball.webp"
+    },
+    {
+      "key": "snake",
+      "title": "Snake — Nokia",
+      "kind": "Fotografía de una pantalla de Snake en un teléfono clásico",
+      "credit": "Nokia",
+      "page": "https://www.phonandroid.com/snake-celebre-jeu-fera-grand-retour-smartphone-bientot.html",
+      "image": "https://img.phonandroid.com/2015/05/snake-grand-retour-smartphone.jpg",
+      "file": "/portal/covers/snake.webp"
+    },
+    {
+      "key": "bricks",
+      "title": "Arkanoid — NES",
+      "kind": "Portada original del clásico de bloques",
+      "credit": "Taito",
+      "page": "https://gamesdb.launchbox-app.com/games/images/2048-arkanoid",
+      "image": "https://images.launchbox-app.com/d6084e99-f48f-4d54-9d1e-f46ca370d03f.png",
+      "file": "/portal/covers/bricks.webp"
+    },
+    {
+      "key": "pong",
+      "title": "Pong",
+      "kind": "Captura del clásico arcade",
+      "credit": "Atari",
+      "page": "https://www.backloggd.com/games/pong/",
+      "image": "https://images.igdb.com/igdb/image/upload/t_1080p/scpunw.png",
+      "file": "/portal/covers/pong.webp"
+    },
+    {
+      "key": "yuri",
+      "title": "Command & Conquer: Yuri's Revenge",
+      "kind": "Caja original de la expansión",
+      "credit": "Westwood Studios / Electronic Arts",
+      "page": "https://cnc.neoseeker.com/wiki/Command_%26_Conquer%3A_Yuri%27s_Revenge",
+      "image": "https://cdn.staticneo.com/w/cnc/Yuri%27s_Revenge_Box.jpg",
+      "file": "/portal/covers/yuri.webp"
+    }
+  ]
+}

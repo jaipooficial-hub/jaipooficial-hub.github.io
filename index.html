@@ -5834,16 +5834,16 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
 #net-games-catalog .catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:25px 20px}
 #net-games-catalog .catalog-game{display:flex;flex-direction:column;align-items:stretch;gap:0;min-width:0;border:0;padding:0;background:none;color:#e7edf7;text-decoration:none;cursor:pointer;text-align:center;font-family:Arial,sans-serif;touch-action:manipulation;border-radius:8px;box-shadow:none}
 #net-games-catalog .catalog-game[hidden],#net-games-catalog [hidden]{display:none!important}
-#net-games-catalog .catalog-cover{display:block;position:relative;aspect-ratio:1;background-image:url('/portal/arcade-covers.png');background-size:400% 200%;background-repeat:no-repeat;background-color:#273142;border-radius:10px;border:3px solid #080b10;box-shadow:0 0 0 1px #505b6c,0 4px 5px #0007,inset 0 0 0 1px #ffffff1a;transition:border-color .15s,box-shadow .15s}
+#net-games-catalog .catalog-cover{display:block;position:relative;aspect-ratio:1;background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#273142;border-radius:10px;border:3px solid #080b10;box-shadow:0 0 0 1px #505b6c,0 4px 5px #0007,inset 0 0 0 1px #ffffff1a;transition:border-color .15s,box-shadow .15s}
 #net-games-catalog .catalog-game:hover .catalog-cover{border-color:#e78636;box-shadow:0 0 0 1px #ffc57f,0 4px 8px #0009}
-#net-games-catalog .catalog-cover-racer{background-position:0 0}
-#net-games-catalog .catalog-cover-bomberman{background-position:33.333333% 0}
-#net-games-catalog .catalog-cover-invaders{background-position:66.666667% 0}
-#net-games-catalog .catalog-cover-pinball{background-position:100% 0}
-#net-games-catalog .catalog-cover-snake{background-position:0 100%}
-#net-games-catalog .catalog-cover-bricks{background-position:33.333333% 100%}
-#net-games-catalog .catalog-cover-pong{background-position:66.666667% 100%}
-#net-games-catalog .catalog-cover-yuri{background-position:100% 100%}
+#net-games-catalog .catalog-cover-racer{background-image:url('/portal/covers/racer.webp');background-size:contain;background-color:#eae5dc}
+#net-games-catalog .catalog-cover-bomberman{background-image:url('/portal/covers/bomberman.webp');background-position:65% center}
+#net-games-catalog .catalog-cover-invaders{background-image:url('/portal/covers/invaders.webp');background-position:center}
+#net-games-catalog .catalog-cover-pinball{background-image:url('/portal/covers/pinball.webp');background-position:35% center}
+#net-games-catalog .catalog-cover-snake{background-image:url('/portal/covers/snake.webp');background-position:center top}
+#net-games-catalog .catalog-cover-bricks{background-image:url('/portal/covers/bricks.webp');background-position:62% center}
+#net-games-catalog .catalog-cover-pong{background-image:url('/portal/covers/pong.webp');background-size:contain;background-color:#000}
+#net-games-catalog .catalog-cover-yuri{background-image:url('/portal/covers/yuri.webp');background-position:center}
 #net-games-catalog .catalog-badge{position:absolute;top:8px;left:7px;border:1px solid #ffce81;border-radius:3px;padding:3px 5px;background:linear-gradient(#ffac38,#e8681e);box-shadow:0 1px 2px #0008;color:#241106;font-size:9px;font-weight:900;letter-spacing:.3px}
 #net-games-catalog .catalog-badge-external{background:#25202bdc;color:#eee0ff;border-color:#9475bd;left:auto;right:7px}
 #net-games-catalog .catalog-game-name{font-size:15px;font-weight:bold;line-height:1.25;margin-top:10px;color:#e9edf6}
@@ -6403,7 +6403,7 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
 </a></div>
 <div id="catalog-empty" class="catalog-empty" hidden><strong>No encontramos ese juego</strong>Prueba otro nombre o explora todas las categorías.<br><button type="button" id="catalog-reset" class="catalog-reset">Ver todos los juegos</button></div>
 </section>
-<footer class="catalog-footer"><span>JuegosFuckYeah · Un clásico más, una partida más.</span><span class="catalog-online">Para PC y celular</span></footer>
+<footer class="catalog-footer"><span>JuegosFuckYeah · Un clásico más, una partida más.</span><a href="/portal/image-sources.html" target="_blank" rel="noopener noreferrer" style="color:#b6c8df">Créditos de imágenes ↗</a><span class="catalog-online">Para PC y celular</span></footer>
 </div>
 
           <!-- VISTA 2: Juego Pong (HTML5 Canvas exacto de Straker Pong) -->
