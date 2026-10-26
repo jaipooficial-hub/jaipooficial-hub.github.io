@@ -48,9 +48,9 @@ export function createRoadSegments() {
   return Array.from({ length: TOTAL_SEGMENTS }, (_, n) => {
     const showLaneStripe = Math.floor(n / RUMBLE_LENGTH) % 2;
     return { index: n, z1: n * SEGMENT_LENGTH, z2: (n + 1) * SEGMENT_LENGTH,
-      showLaneStripe, grassColor: showLaneStripe ? '#10AA10' : '#009A00',
-      roadColor: showLaneStripe ? '#6B6B6B' : '#696969',
-      rumbleColor: showLaneStripe ? '#eeeeee' : '#d84838' };
+      showLaneStripe, grassColor: showLaneStripe ? '#528f3b' : '#4f8e3b',
+      roadColor: showLaneStripe ? '#525e68' : '#505c66',
+      rumbleColor: showLaneStripe ? '#f4dec1' : '#ad4e43' };
   });
 }
 export function convertZPositionRoadTo2dCoords(playerX, z, currentZPosition, width = 320, objectX = 0) {

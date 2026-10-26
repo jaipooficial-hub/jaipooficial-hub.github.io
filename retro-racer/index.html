@@ -12,7 +12,7 @@ button{font: bold 11px 'Courier New',monospace;min-height:30px;background:#c0c0c
 button,button *,#canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 button:active,button.pressed{border-color:#404040 #fff #fff #404040;background:#a0a0a0;box-shadow:inset 1px 1px #000}
 button:focus-visible{outline:2px dotted #000080;outline-offset:-5px}button:disabled{color:#707070;cursor:default}
-#canvas{display:block;width:100%;max-width:min(100%,calc(133.333vh - 358px));height:auto;aspect-ratio:4/3;image-rendering:pixelated;image-rendering:crisp-edges;border:3px solid #c0c0c0;background:#302858;touch-action:manipulation;cursor:pointer}
+#canvas{display:block;box-sizing:content-box;width:calc(100% - 6px);max-width:min(calc(100% - 6px),calc(133.333vh - 358px));height:auto;aspect-ratio:4/3;image-rendering:crisp-edges;image-rendering:pixelated;border:3px solid #c0c0c0;background:#302858;touch-action:manipulation;cursor:pointer}
 .retro-touch-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:5px}
 .retro-touch-controls button{min-height:46px;padding:4px 2px}
 #btn-touch-nitro{background:#e8b838}#btn-touch-nitro.boosting{background:#f89828}

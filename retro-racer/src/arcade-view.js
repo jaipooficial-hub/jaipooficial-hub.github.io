@@ -3,6 +3,7 @@ import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js';
 import { createRoadSegments, convertZPositionRoadTo2dCoords, roadAt } from './road.js';
 import { drawShape } from './canvas-view.js';
 import { loadCarSheet, drawCarSprite, playerSprite } from './car-sprites.js';
+import { drawLandscape, drawRoadsideTree, drawGroundDetail } from './scenery.js';
 const FONT = {
  A:[14,17,17,31,17,17,17],B:[30,17,17,30,17,17,30],C:[14,17,16,16,16,17,14],D:[30,17,17,17,17,17,30],E:[31,16,16,30,16,16,31],F:[31,16,16,30,16,16,16],G:[14,17,16,23,17,17,15],H:[17,17,17,31,17,17,17],I:[31,4,4,4,4,4,31],J:[7,2,2,2,18,18,12],K:[17,18,20,24,20,18,17],L:[16,16,16,16,16,16,31],M:[17,27,21,21,17,17,17],N:[17,25,21,19,17,17,17],O:[14,17,17,17,17,17,14],P:[30,17,17,30,16,16,16],Q:[14,17,17,17,21,18,13],R:[30,17,17,30,20,18,17],S:[15,16,16,14,1,1,30],T:[31,4,4,4,4,4,4],U:[17,17,17,17,17,17,14],V:[17,17,17,17,17,10,4],W:[17,17,17,21,21,21,10],X:[17,17,10,4,10,17,17],Y:[17,17,10,4,4,4,4],Z:[31,1,2,4,8,16,31],
  '0':[14,17,19,21,25,17,14],'1':[4,12,4,4,4,4,14],'2':[14,17,1,2,4,8,31],'3':[30,1,1,14,1,1,30],'4':[2,6,10,18,31,2,2],'5':[31,16,16,30,1,1,30],'6':[14,16,16,30,17,17,14],'7':[31,1,2,4,8,8,8],'8':[14,17,17,14,17,17,14],'9':[14,17,17,15,1,1,14],
@@ -29,13 +30,7 @@ function drawCar(ctx, sprite, x, y, w) {
 }
 export function drawRace(ctx,s,best) {
   ctx.imageSmoothingEnabled = false;
-  ctx.fillStyle='#72D7EE'; ctx.fillRect(0,0,320,240);
-  const horizonShift = -roadAt(s.distance).heading * 80;
-  ctx.fillStyle='#fffbbc'; ctx.fillRect(234+horizonShift,41,24,24);
-  ctx.fillStyle='#dbfaff';
-  for(const x of [30,132,280]) {ctx.fillRect(x+horizonShift,47,32,7);ctx.fillRect(x+8+horizonShift,42,17,5);}
-  ctx.fillStyle='#4b9548';ctx.fillRect(0,HORIZON-4,320,8);
-  ctx.fillStyle='#009A00';ctx.fillRect(0,HORIZON,320,240-HORIZON);
+  drawLandscape(ctx,roadAt(s.distance).heading);
   const base = Math.floor(s.distance / SEGMENT_LENGTH);
   const visible = [], occlusion = new Map();
   let clipY = 240;
@@ -53,15 +48,22 @@ export function drawRace(ctx,s,best) {
     const {segment,near,far,clip}=visible[i];
     ctx.save();ctx.beginPath();ctx.rect(0,0,320,Math.ceil(clip));ctx.clip();
     ctx.fillStyle=segment.grassColor;ctx.fillRect(0,Math.floor(far.y),320,Math.ceil(near.y)-Math.floor(far.y)+1);
+    quad(ctx,'#c3ad77',far,near,-1.24,1.24);
     quad(ctx,segment.rumbleColor,far,near,-1.14,1.14);
     quad(ctx,segment.roadColor,far,near,-1,1);
     if(segment.showLaneStripe)for(const lane of [-1/3,1/3])quad(ctx,'#fff',far,near,lane-.012,lane+.012);
+    drawGroundDetail(ctx,s,segment,project);
     ctx.restore();
   }
   const objects=[];
   for(let i=0;i<12;i++) {
     const z=(Math.floor(s.distance/40)+i+1)*40;
     objects.push({z,x:-1.25,post:true},{z,x:1.25,post:true});
+  }
+  for(let i=0;i<15;i++) {
+    const z=(Math.floor(s.distance/34)+i+1)*34;
+    objects.push({z,x:-1.65-((Math.floor(z/34)%3)*.38),tree:true});
+    objects.push({z:z+17,x:1.8+((Math.floor(z/34)%2)*.45),tree:true});
   }
   for(const car of s.traffic) if(!car.destroyed&&car.z>s.distance-2&&car.z<s.distance+500)objects.push(car);
   for(const bullet of s.bullets) objects.push({...bullet,bullet:true});
@@ -72,7 +74,9 @@ export function drawRace(ctx,s,best) {
     if(!p||p.y<HORIZON||p.y>265||p.x<-150||p.x>470)continue;
     const limit=occlusion.get(Math.floor(obj.z/SEGMENT_LENGTH))??240;
     ctx.save();ctx.beginPath();ctx.rect(0,0,320,Math.ceil(limit));ctx.clip();
-    if(obj.post) {
+    if(obj.tree) {
+      drawRoadsideTree(ctx,p);
+    } else if(obj.post) {
       const w=Math.max(1,Math.round(p.w*.02)),h=Math.max(2,Math.round(p.w*.11));
       ctx.fillStyle='#ddd';ctx.fillRect(Math.round(p.x),Math.round(p.y-h),w,h);
       ctx.fillStyle='#d84838';ctx.fillRect(Math.round(p.x),Math.round(p.y-h),w,Math.ceil(h/3));

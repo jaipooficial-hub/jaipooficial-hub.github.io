@@ -40,6 +40,14 @@ Se conservan transparencias, pasajeros, neumáticos, parabrisas y cromados.
 
 ## Geometría
 
+El escenario se dibuja a 320×240 píxeles nativos. `scenery.js` contiene pixel art
+escrito a mano: nubes, sol escalonado, dos planos de montañas, árboles con tres
+niveles de detalle, hierba y grano de asfalto anclados al terreno. Los sprites del
+escenario se dibujan con píxeles cuadrados y escala entera, sin estirar sus ejes.
+La carretera se rasteriza por filas enteras sin antialiasing; los árboles usan
+la misma perspectiva y ocultación tras crestas que los autos. El canvas conserva
+su proporción 4:3 con el borde fuera del área de dibujo.
+
 `roadAt(z)` devuelve el centro, la tangente y la curvatura de una carretera con
 rectas y siete giros con entrada/salida cosenoidal. La proyección resta el centro
 y la tangente en la posición del jugador; esto evita el desplazamiento lateral
