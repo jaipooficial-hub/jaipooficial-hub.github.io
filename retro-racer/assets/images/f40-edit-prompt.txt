@@ -1,0 +1,4 @@
+Tool: built-in image_gen. Mode: background-extraction.
+Source: user attachment 1000332034.jpg (Ferrari F40, Turbo OutRun, Tiertex; rip Yawackhary).
+
+Edit target: the supplied Ferrari F40 Turbo OutRun Mega Drive / Genesis sprite sheet. Background-extraction only: remove the mint green background to actual transparency. Preserve EVERY original sprite EXACTLY with original pixel art, colors, details, shapes, orientation, relative positions, spacing, and sheet aspect ratio. Do not redraw, reinterpret, smooth, enhance, add, recolor, rearrange or crop any sprites. Preserve all 8 cars in the top row in precisely their current order; especially cars 1, 2, 3 and 7 must remain unchanged. Keep the sheet layout and dimensions 1280x386 if possible. No checkerboard baked into the image. Output transparent PNG. This is source material for exact game sprite extraction, not new artwork.

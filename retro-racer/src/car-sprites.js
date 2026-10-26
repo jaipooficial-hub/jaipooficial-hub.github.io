@@ -1,9 +1,12 @@
-// User-provided OutRun (Master System) sheet, edited to remove the green backdrop.
-// Regions use the 2048-wide preview coordinate system of outrun-transparent.png.
+// User-provided Ferrari F40 / Turbo OutRun sheet, with transparent backdrop.
+// Coordinates use the 2048-wide preview. Only top-row sprites 1, 2, 3 and 7.
 import { TRAFFIC_COLORS } from './config.js';
 
 const FRAMES = {
-  rear: [188, 84, 165, 130]
+  left: [14, 76, 249, 158],
+  leftSoft: [266, 76, 254, 158],
+  rear: [520, 76, 245, 158],
+  jump: [1532, 62, 252, 172]
 };
 const PLAYER_COLOR = [28, 30, 36];
 
@@ -38,6 +41,7 @@ function withBodyColor(frame, rgb, black = false) {
   for (let i = 0; i < image.data.length; i += 4) {
     const [r, g, b, a] = image.data.subarray(i, i + 4);
     if (!a || r < 75 || r - g < 38 || r - b < 32) continue;
+    if (r > 180 && g > 85 && b < 80) continue; // Keep amber rear lights.
     // Swap the red body palette; retain tyres, windows, chrome and passengers.
     const light = Math.min(1, Math.max(.3, r / 255));
     for (let c = 0; c < 3; c++) image.data[i + c] = black
@@ -48,16 +52,14 @@ function withBodyColor(frame, rgb, black = false) {
   return tile;
 }
 
-// Derive restrained rear-view yaw from one silhouette. Every pose has identical
-// dimensions and tyre baseline; the lower bumper stays anchored to the road.
-function steeringPose(rear, offset) {
+// Keep each supplied pose intact, centered on the same tyre baseline. Right
+// views are exact horizontal reflections of the two supplied left views.
+function alignedPose(frame, width, height, flip = false) {
   const tile = document.createElement('canvas');
-  tile.width = rear.width + 8; tile.height = rear.height;
+  tile.width = width; tile.height = height;
   const ctx = tile.getContext('2d'); ctx.imageSmoothingEnabled = false;
-  for (let y = 0; y < rear.height; y++) {
-    const shift = Math.round(offset * (1 - y / (rear.height - 1)));
-    ctx.drawImage(rear, 0, y, rear.width, 1, 4 + shift, y, rear.width, 1);
-  }
+  if (flip) { ctx.translate(width, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(frame, Math.floor((width-frame.width)/2), height-frame.height);
   return tile;
 }
 
@@ -66,16 +68,28 @@ export async function loadCarSheet() {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error('No se pudieron cargar los sprites. Recarga la página.'));
-    img.src = '/retro-racer/assets/images/outrun-transparent.png';
+    img.src = '/retro-racer/assets/images/f40-transparent.png';
   });
   const frames = Object.fromEntries(Object.entries(FRAMES).map(([key, rect]) => [key, cutFrame(sheet, rect)]));
-  const rear = withBodyColor(frames.rear, PLAYER_COLOR, true);
-  const steering = Array.from({ length: 9 }, (_, i) => steeringPose(rear, i - 4));
+  const width = Math.max(...Object.values(frames).map(frame => frame.width)) + 4;
+  const height = Math.max(...Object.values(frames).map(frame => frame.height));
+  const player = Object.fromEntries(Object.entries(frames).map(([key, frame]) =>
+    [key, alignedPose(withBodyColor(frame, PLAYER_COLOR, true), width, height)]));
+  player.rightSoft = alignedPose(withBodyColor(frames.leftSoft, PLAYER_COLOR, true), width, height, true);
+  player.right = alignedPose(withBodyColor(frames.left, PLAYER_COLOR, true), width, height, true);
+  player.steering = [player.left, player.leftSoft, player.rear, player.rightSoft, player.right];
   return {
-    player: { rear: steering[4], left: steering[0], right: steering[8], steering },
+    player,
     traffic: TRAFFIC_COLORS.map(rgb => withBodyColor(frames.rear, rgb)),
     baseWidth: frames.rear.width
   };
+}
+
+export function playerSprite(player, state) {
+  if (state.airborne) return player.jump;
+  const turn = Math.max(-1, Math.min(1, state.visualTurn || 0));
+  const amount = Math.abs(turn) < .2 ? 0 : Math.abs(turn) < .6 ? 1 : 2;
+  return player.steering?.[2 + Math.sign(turn) * amount];
 }
 
 export function drawCarSprite(ctx, sprite, x, tyreY, roadWidth, baseWidth) {
