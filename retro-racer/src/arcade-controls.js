@@ -6,6 +6,13 @@ function sync() {
 }
 export function clearInput() { keyboard.clear(); touch.clear(); sync(); document.querySelectorAll('[data-drive]').forEach(button => button.classList.remove('pressed')); }
 export function bindControls(actions) {
+  // The embedded game has its own document: desktop selection rules do not
+  // reach these controls. Cancel long-press selection without blocking clicks.
+  const blockControlSelection = event => {
+    if (event.target?.closest?.('button, canvas')) event.preventDefault();
+  };
+  document.addEventListener('selectstart', blockControlSelection);
+  document.addEventListener('contextmenu', blockControlSelection);
   document.addEventListener('keydown', e => {
     if (e.target?.matches?.('input, textarea, select')) return;
     if (keyMap[e.code]) { e.preventDefault(); keyboard.add(e.code); sync(); if (!e.repeat) actions.start(); }
