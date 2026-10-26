@@ -1,4 +1,4 @@
-import { MAX_SPEED, TRAFFIC_COLORS } from './config.js';
+import { MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js';
 import { elevationAt } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;
@@ -64,8 +64,7 @@ export function stepRace(s, input, dt, random = Math.random) {
   s.hitCooldown = Math.max(0, s.hitCooldown - dt); s.flash = Math.max(0, s.flash - dt);
   s.messageTime = Math.max(0, s.messageTime - dt);
   s.shotCooldown = Math.max(0, s.shotCooldown - dt);
-  const boost = s.nitro > 0;
-  if (boost) {
+  if (s.nitro > 0) {
     s.nitro = Math.max(0, s.nitro - dt);
     if (s.nitro < 1e-8) s.nitro = 0;
     s.nitroCharge = s.nitro / 3 * 100;
@@ -73,8 +72,9 @@ export function stepRace(s, input, dt, random = Math.random) {
     s.nitroCharge = Math.min(100, s.nitroCharge + 12.5 * dt);
     if (s.nitroCharge > 100 - 1e-8) s.nitroCharge = 100;
   }
-  const accel = input.down ? -65 : boost ? 90 : input.up ? 45 : -10;
-  s.speed = Math.max(0, Math.min(boost ? MAX_SPEED * 1.75 : Math.max(MAX_SPEED, s.speed - 24 * dt), s.speed + accel * dt));
+  const boost = s.nitro > 0;
+  const accel = input.down ? -95 : boost ? 150 : input.up ? 90 : -12;
+  s.speed = Math.max(0, Math.min(boost ? NITRO_MAX_SPEED : MAX_SPEED, s.speed + accel * dt));
   const steering = Number(!!input.right) - Number(!!input.left);
   // x is relative to the road, just like traffic and shots. The camera and car
   // follow the track tangent automatically; steering only changes lane offset.

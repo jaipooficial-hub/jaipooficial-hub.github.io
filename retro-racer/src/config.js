@@ -5,7 +5,9 @@ export const SEGMENT_LENGTH = 5;
 export const TOTAL_SEGMENTS = 1100;
 export const DRAW_DISTANCE = 100;
 export const FPS = 60;
-export const MAX_SPEED = 60;
+// Physics uses metres/second; the HUD converts back to the exact km/h limits.
+export const MAX_SPEED = 250 / 3.6;
+export const NITRO_MAX_SPEED = 380 / 3.6;
 export const ROAD_WIDTH = 8;
 export const CAMERA_BACK = 7.5;
 export const CAMERA_HEIGHT = 8;

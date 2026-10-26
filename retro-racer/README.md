@@ -13,7 +13,9 @@ El bucle original se sustituye por una simulación fija de 60 pasos por segundo.
 - R / NITRO: turbo de 3 s; recarga automática completa en 8 s, con barra visible.
 - P / Escape: pausa. Enter: iniciar / continuar. Reiniciar: nueva carrera.
 - Botones con pulsación sostenida, multitáctil y captura de puntero.
-- Aceleración rápida (0–216 km/h en 1.33 s), salida de 1 s, 30 autos y colisiones.
+- Máximo normal de 250 km/h y de 380 km/h con nitro. Aceleración de 0–250 km/h
+  en unos 0.8 s y de 250–380 km/h en 0.25 s; frenado reforzado. El límite
+  normal vuelve a aplicarse al terminar el nitro. Salida de 1 s, 30 autos y colisiones.
 - Tres sectores, 4.8 km; cada checkpoint añade 18 s. Récord local de esta variante.
 - Pausa automática al perder foco u ocultar la página.
 - Seis elevaciones suaves. A partir de 162 km/h puede despegar en las crestas;
