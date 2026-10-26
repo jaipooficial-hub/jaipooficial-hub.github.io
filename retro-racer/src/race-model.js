@@ -1,4 +1,5 @@
-import { MAX_SPEED } from './config.js';
+import { MAX_SPEED, TRAFFIC_COLORS } from './config.js';
+import { elevationAt } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;
 export const CHECKPOINTS = [1600, 3200];
@@ -8,8 +9,9 @@ export function createRace(random = Math.random) {
     distance: 0, timeLeft: 65, elapsed: 0, sector: 0, overtakes: 0, hits: 0,
     nitro: 0, nitroCharge: 100, hitCooldown: 0, flash: 0, message: '', messageTime: 0,
     shotCooldown: 0, bullets: [], effects: [],
+    y: 0, verticalSpeed: 0, airHeight: 0, airborne: false, landingTime: 0, jumps: 0,
     traffic: Array.from({ length: 30 }, (_, i) => ({ z: 80 + i * 52,
-      x: LANES[i % 3], speed: 24 + random() * 12, color: i % 4, passed: false, destroyed: false })) };
+      x: LANES[i % 3], speed: 24 + random() * 12, color: i % TRAFFIC_COLORS.length, passed: false, destroyed: false })) };
 }
 export function startRace(s) { if (s.phase === 'ready') s.phase = 'countdown'; }
 export function pauseRace(s) {
@@ -23,8 +25,31 @@ export function activateNitro(s) {
 export function fireShot(s) {
   if (s.phase !== 'racing' || s.shotCooldown > 0) return false;
   s.shotCooldown = 0.24;
-  s.bullets.push({ z: s.distance + 3, x: s.x, speed: s.speed + 180, life: 1.6 });
+  s.bullets.push({ z: s.distance + 3, x: s.x, speed: s.speed + 180, life: 1.6, height: s.airHeight + .6 });
   return true;
+}
+export function stepJump(s, previousDistance, dt) {
+  const ground = elevationAt(s.distance), before = elevationAt(previousDistance);
+  s.landingTime = Math.max(0, s.landingTime - dt);
+  if (!s.airborne) {
+    // Road-relative downforce becomes negative near the crest. Leave the road
+    // with the upward velocity of the ramp instead of popping up vertically.
+    const requiredForce = 9.8 + before.curvature * s.speed * s.speed;
+    if (s.speed >= 45 && before.grade > .005 && requiredForce < 0 && !s.landingTime) {
+      s.airborne = true; s.y = before.height;
+      s.verticalSpeed = before.grade * s.speed; s.jumps++;
+      s.message = 'SALTO'; s.messageTime = .7;
+    } else { s.y = ground.height; s.verticalSpeed = ground.grade * s.speed; }
+  }
+  if (s.airborne) {
+    s.y += s.verticalSpeed * dt - 4.9 * dt * dt;
+    s.verticalSpeed -= 9.8 * dt;
+    if (s.y <= ground.height && s.verticalSpeed <= ground.grade * s.speed) {
+      s.y = ground.height; s.verticalSpeed = ground.grade * s.speed;
+      s.airborne = false; s.landingTime = .3;
+    }
+  }
+  s.airHeight = Math.max(0, s.y - ground.height);
 }
 export function stepRace(s, input, dt, random = Math.random) {
   if (!Number.isFinite(dt) || dt <= 0) return;
@@ -58,16 +83,19 @@ export function stepRace(s, input, dt, random = Math.random) {
   if (Math.abs(s.x) > 0.94 && s.speed > 22) s.speed = Math.max(22, s.speed - 55 * dt);
   const previousDistance = s.distance;
   s.distance = Math.min(RACE_LENGTH, s.distance + s.speed * dt);
+  stepJump(s, previousDistance, dt);
   for (const car of s.traffic) { car.previousZ = car.z; car.z += car.speed * dt; }
   s.effects = s.effects.filter(effect => (effect.life -= dt) > 0);
   if (input.fire) fireShot(s);
   for (const bullet of s.bullets) {
     const previousZ = bullet.z;
     bullet.z += bullet.speed * dt; bullet.life -= dt;
+    // Guided arcade rounds settle towards traffic after firing during a jump.
+    bullet.height = Math.max(.6, (bullet.height ?? .6) - 5 * dt);
     // Swept relative collision: even at nitro speed a shot cannot skip a car.
     let target = null, firstHit = Infinity;
     for (const car of s.traffic) {
-      if (car.destroyed || Math.abs(car.x - bullet.x) > 0.22) continue;
+      if (car.destroyed || bullet.height > 1.5 || Math.abs(car.x - bullet.x) > 0.22) continue;
       const before = car.previousZ - previousZ, after = car.z - bullet.z;
       if (before >= -3 && after <= 3) {
         const hit = Math.max(0, (before - 3) / Math.max(0.001, before - after));
@@ -83,7 +111,7 @@ export function stepRace(s, input, dt, random = Math.random) {
   for (const car of s.traffic) {
     const gap = car.z - s.distance;
     const crossed = car.previousZ >= previousDistance && car.z <= s.distance;
-    if (!car.destroyed && !s.hitCooldown && (Math.abs(gap) < 4 || crossed) && Math.abs(car.x - s.x) < 0.32) {
+    if (!car.destroyed && s.airHeight < 1.2 && !s.hitCooldown && (Math.abs(gap) < 4 || crossed) && Math.abs(car.x - s.x) < 0.32) {
       s.speed *= 0.42; s.hitCooldown = 1.4; s.flash = 0.4;
       s.message = 'CHOQUE'; s.messageTime = 1;
     }

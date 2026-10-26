@@ -23,7 +23,7 @@ function pause() { pauseRace(state); clearInput(); accumulator = 0; lastTime = 0
 function suspend() { if (['racing','countdown'].includes(state.phase)) pause(); }
 function updateUI() {
   const status = document.getElementById('race-status');
-  const descriptions = { ready: assetError || (!assetsReady ? 'Cargando los autos originales…' : 'Llega a la meta. Cada sector da +18 s. El auto acompaña las curvas; tú eliges el carril.'), countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'C / Espacio: disparar. R: nitro recargable. P: pausa.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta! '+state.elapsed.toFixed(1)+' s · '+state.overtakes+' adelantamientos · '+state.hits+' blancos.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
+  const descriptions = { ready: assetError || (!assetsReady ? 'Cargando los sprites de los autos…' : 'Tu auto es el negro. Lomas: salta a alta velocidad. Cada sector da +18 s.'), countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'En las crestas puedes saltar a alta velocidad. C: fuego · R: nitro.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta! '+state.elapsed.toFixed(1)+' s · '+state.overtakes+' adelantamientos · '+state.hits+' blancos.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
   if (status.textContent !== descriptions[state.phase]) status.textContent = descriptions[state.phase];
   const startBtn = document.getElementById('btn-start');
   const startLabel = ['won','over'].includes(state.phase) ? 'Otra carrera' : state.phase === 'paused' ? 'Continuar' : state.phase === 'ready' ? 'Jugar' : 'En carrera';

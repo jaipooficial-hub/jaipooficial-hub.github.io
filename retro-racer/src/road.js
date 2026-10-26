@@ -10,6 +10,23 @@ export const BENDS = [
   [2200, 2520, -0.36], [2900, 3240, 0.3], [3600, 3900, -0.24],
   [4240, 4570, 0]
 ];
+// Smooth humps return to flat ground with continuous height, grade and curvature.
+// The crests can unload the suspension at high speed; no invisible jump trigger.
+export const HILLS = [
+  [480, 680, 6], [1180, 1390, 5], [1830, 2050, 7],
+  [2690, 2900, 6], [3420, 3650, 8], [4040, 4250, 6]
+];
+export function elevationAt(z) {
+  for (const [start, end, amplitude] of HILLS) {
+    if (z <= start || z >= end) continue;
+    const k = Math.PI / (end - start), t = (z - start) * k;
+    const sin = Math.sin(t), cos = Math.cos(t);
+    return { height: amplitude * sin ** 4,
+      grade: 4 * amplitude * k * sin ** 3 * cos,
+      curvature: 4 * amplitude * k * k * (3 * sin * sin * cos * cos - sin ** 4) };
+  }
+  return { height: 0, grade: 0, curvature: 0 };
+}
 export function roadAt(z) {
   let center = 0, heading = 0, end = 0;
   for (const [start, finish, target] of BENDS) {
@@ -45,8 +62,9 @@ export function convertZPositionRoadTo2dCoords(playerX, z, currentZPosition, wid
   // road slides sideways on straights after a bend and disagrees with steering.
   const translatedX = point.center - origin.center - origin.heading * dz + (objectX - playerX) * ROAD_WIDTH;
   const scale = CAMERA_DEPTH * width / (2 * translatedZ);
+  const elevation = elevationAt(z).height - elevationAt(currentZPosition).height;
   return { x: width / 2 + scale * translatedX,
-    y: HORIZON + scale * CAMERA_HEIGHT, w: scale * ROAD_WIDTH, scale };
+    y: HORIZON + scale * (CAMERA_HEIGHT - elevation), w: scale * ROAD_WIDTH, scale };
 }
 export function carTurn(s, steering = 0) {
   if (s.speed < 0.5) return 0;

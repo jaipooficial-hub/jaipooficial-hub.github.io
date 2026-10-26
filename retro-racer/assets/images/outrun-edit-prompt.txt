@@ -1,0 +1,6 @@
+Use case: background-extraction. Edit target: the attached OutRun Master System Ferrari sprite sheet. Production game asset, PNG with genuine alpha transparency. Remove ONLY the pale mint green background everywhere, including gaps and enclosed green holes around the cars. Remove the credit text/banner at the very bottom (it will be credited separately in text). Preserve ALL car sprites, original positions, original dimensions/layout (1280 by 351), original pixel shapes, original red/yellow/white/black/navy colors, hard pixel outlines, and original low-resolution 8-bit appearance exactly. Do not redraw, smooth, upscale, add details, alter colors, move, crop, overlap or rearrange any car. Keep all rows and angles. No text, no background, no painted checkerboard. This must be the same sheet with transparent green areas, not a redesigned car sheet. All red body pixels must remain red so the game can apply palette swapping.
+
+Tool: built-in ImageGen; transparent_background=true.
+Source: user attachment 1-1000332028.jpg.
+Saved output: outrun-transparent.png (2171 x 724, RGBA).
+Game palette swapping and frame selection are implemented in src/car-sprites.js.
