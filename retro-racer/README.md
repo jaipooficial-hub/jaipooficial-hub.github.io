@@ -67,6 +67,11 @@ admite como argumento la ruta de sus node_modules).
 
 ## Créditos
 
+El jugador utiliza una única vista trasera negra, sin alternar carrocerías al
+acelerar. Nueve poses de giro leves se derivan de esa misma imagen y comparten
+tamaño y base de neumáticos. La dirección entra y vuelve al centro gradualmente
+en el paso de simulación; la elevación visual solo procede de los saltos reales.
+
 - Juego base: simondiep / Retro Racer (paquete original declarado MIT).
 - Sprites activos: OutRun / SEGA, rip Yawackhary, lámina aportada por el usuario.
 - Idea original: Jake Gordon, https://codeincomplete.com/posts/javascript-racer/

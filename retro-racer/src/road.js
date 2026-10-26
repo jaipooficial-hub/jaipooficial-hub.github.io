@@ -68,6 +68,6 @@ export function convertZPositionRoadTo2dCoords(playerX, z, currentZPosition, wid
 }
 export function carTurn(s, steering = 0) {
   if (s.speed < 0.5) return 0;
-  const bend = roadAt(s.distance).curvature * 180;
-  return Math.max(-1, Math.min(1, steering * 0.85 + bend));
+  const bend = roadAt(s.distance).curvature * 45;
+  return Math.max(-1, Math.min(1, steering * 0.75 + bend));
 }

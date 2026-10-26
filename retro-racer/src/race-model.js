@@ -1,5 +1,5 @@
 import { MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js';
-import { elevationAt } from './road.js';
+import { elevationAt, carTurn } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;
 export const CHECKPOINTS = [1600, 3200];
@@ -8,7 +8,7 @@ export function createRace(random = Math.random) {
   return { phase: 'ready', resumePhase: 'racing', countdown: 1, speed: 0, x: 0,
     distance: 0, timeLeft: 65, elapsed: 0, sector: 0, overtakes: 0, hits: 0,
     nitro: 0, nitroCharge: 100, hitCooldown: 0, flash: 0, message: '', messageTime: 0,
-    shotCooldown: 0, bullets: [], effects: [],
+    shotCooldown: 0, bullets: [], effects: [], visualTurn: 0,
     y: 0, verticalSpeed: 0, airHeight: 0, airborne: false, landingTime: 0, jumps: 0,
     traffic: Array.from({ length: 30 }, (_, i) => ({ z: 80 + i * 52,
       x: LANES[i % 3], speed: 24 + random() * 12, color: i % TRAFFIC_COLORS.length, passed: false, destroyed: false })) };
@@ -76,6 +76,9 @@ export function stepRace(s, input, dt, random = Math.random) {
   const accel = input.down ? -95 : boost ? 150 : input.up ? 90 : -12;
   s.speed = Math.max(0, Math.min(boost ? NITRO_MAX_SPEED : MAX_SPEED, s.speed + accel * dt));
   const steering = Number(!!input.right) - Number(!!input.left);
+  // Smooth yaw in simulation time, independent of the display refresh rate.
+  const targetTurn = carTurn(s, steering);
+  s.visualTurn += (targetTurn - s.visualTurn) * (1 - Math.exp(-dt / .12));
   // x is relative to the road, just like traffic and shots. The camera and car
   // follow the track tangent automatically; steering only changes lane offset.
   s.x += steering * Math.min(2.1, s.speed / MAX_SPEED * 1.6) * dt;

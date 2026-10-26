@@ -3,11 +3,7 @@
 import { TRAFFIC_COLORS } from './config.js';
 
 const FRAMES = {
-  rear: [188, 84, 165, 130],
-  rear2: [12, 84, 174, 132],
-  rear3: [357, 93, 167, 120],
-  left: [1789, 217, 240, 104],
-  right: [10, 216, 250, 108]
+  rear: [188, 84, 165, 130]
 };
 const PLAYER_COLOR = [28, 30, 36];
 
@@ -52,6 +48,19 @@ function withBodyColor(frame, rgb, black = false) {
   return tile;
 }
 
+// Derive restrained rear-view yaw from one silhouette. Every pose has identical
+// dimensions and tyre baseline; the lower bumper stays anchored to the road.
+function steeringPose(rear, offset) {
+  const tile = document.createElement('canvas');
+  tile.width = rear.width + 8; tile.height = rear.height;
+  const ctx = tile.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  for (let y = 0; y < rear.height; y++) {
+    const shift = Math.round(offset * (1 - y / (rear.height - 1)));
+    ctx.drawImage(rear, 0, y, rear.width, 1, 4 + shift, y, rear.width, 1);
+  }
+  return tile;
+}
+
 export async function loadCarSheet() {
   const sheet = await new Promise((resolve, reject) => {
     const img = new Image();
@@ -60,9 +69,10 @@ export async function loadCarSheet() {
     img.src = '/retro-racer/assets/images/outrun-transparent.png';
   });
   const frames = Object.fromEntries(Object.entries(FRAMES).map(([key, rect]) => [key, cutFrame(sheet, rect)]));
+  const rear = withBodyColor(frames.rear, PLAYER_COLOR, true);
+  const steering = Array.from({ length: 9 }, (_, i) => steeringPose(rear, i - 4));
   return {
-    // Every player angle uses the same exclusive black paint.
-    player: Object.fromEntries(Object.entries(frames).map(([key, img]) => [key, withBodyColor(img, PLAYER_COLOR, true)])),
+    player: { rear: steering[4], left: steering[0], right: steering[8], steering },
     traffic: TRAFFIC_COLORS.map(rgb => withBodyColor(frames.rear, rgb)),
     baseWidth: frames.rear.width
   };
@@ -70,7 +80,7 @@ export async function loadCarSheet() {
 
 export function drawCarSprite(ctx, sprite, x, tyreY, roadWidth, baseWidth) {
   if (!sprite) return;
-  // Preserve the sheet's angle-dependent silhouette and use a common tyre baseline.
+  // All player poses share a fixed canvas and a common tyre baseline.
   const scale = roadWidth / baseWidth;
   const width = Math.max(1, Math.round(sprite.width * scale));
   const height = Math.max(1, Math.round(sprite.height * scale));

@@ -48,7 +48,6 @@ function frame(timestamp) {
   lastTime = timestamp;
   accumulator += dt;
   while (accumulator >= 1/60) { stepRace(state,input,1/60); accumulator -= 1/60; }
-  state.steerLeft = input.left; state.steerRight = input.right;
   if (state.phase === 'won' && !state.recordSaved) {
     state.recordSaved = true;
     if (!best || state.elapsed < best) { best = state.elapsed; try { localStorage.setItem('axbyz-racer-combat-best',String(best)); } catch (_) {} }

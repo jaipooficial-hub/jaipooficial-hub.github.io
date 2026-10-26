@@ -1,6 +1,6 @@
 import { RACE_LENGTH } from './race-model.js';
 import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js';
-import { createRoadSegments, convertZPositionRoadTo2dCoords, carTurn, roadAt } from './road.js';
+import { createRoadSegments, convertZPositionRoadTo2dCoords, roadAt } from './road.js';
 import { drawShape } from './canvas-view.js';
 import { loadCarSheet, drawCarSprite } from './car-sprites.js';
 const FONT = {
@@ -95,10 +95,8 @@ export function drawRace(ctx,s,best) {
   const shadowWidth=Math.round(contact.w*.34/(1+s.airHeight*.12));
   ctx.fillStyle='#303030';ctx.fillRect(160-Math.floor(shadowWidth/2),Math.round(contact.y-3),shadowWidth,3);
   if(s.flash<=0||Math.floor(s.flash*16)%2===0) {
-    const turn=carTurn(s,Number(!!s.steerRight)-Number(!!s.steerLeft));
-    const frame = turn < -.1 ? 'left' : turn > .1 ? 'right'
-      : s.speed > 1 ? ['rear', 'rear2', 'rear3'][Math.floor(s.elapsed * 5) % 3] : 'rear';
-    const img = sprites.player[frame];
+    const pose=Math.round(Math.max(-1,Math.min(1,s.visualTurn || 0))*4)+4;
+    const img = sprites.player.steering?.[pose];
     drawCar(ctx,img,160,contact.y-lift,contact.w*.42);
     if(s.nitro>0) {
       const exhaustY=Math.round(contact.y-lift-3);
