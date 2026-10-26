@@ -5803,6 +5803,64 @@
       left: 6vw !important;
       top: calc(50% - 80px) !important;
     }
+  /* JuegosFuckYeah: portal arcade de los 2000, tema oscuro. */
+body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-direction:column;gap:24px;min-height:100%;width:100%;padding:28px;background:#11151c;color:#edf1f8;font-family:Arial,Helvetica,sans-serif;container:arcade / inline-size;color-scheme:dark}
+#net-games-catalog *{box-sizing:border-box}
+#net-games-catalog .catalog-masthead{display:grid;grid-template-columns:minmax(170px,1fr) minmax(220px,1.5fr) minmax(170px,1fr);align-items:center;gap:22px}
+#net-games-catalog .catalog-brand{text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;padding:0;border:0;background:none;cursor:pointer;line-height:.9}
+#net-games-catalog .catalog-brand-main{font-family:Impact,'Arial Black',Arial,sans-serif;font-size:46px;font-weight:900;letter-spacing:-1px;color:#ff8b25;background:linear-gradient(#ffb542 8%,#ff7b20 50%,#dc3b12 95%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 #4b1a0c)}
+#net-games-catalog .catalog-brand-sub{display:flex;align-items:center;gap:7px;font-size:23px;font-weight:900;letter-spacing:1px;color:#f4f6fa;margin-top:7px}
+#net-games-catalog .catalog-brand-play{display:inline-grid;place-items:center;width:23px;height:23px;font-size:13px;letter-spacing:0;background:linear-gradient(#ff9a31,#d74211);border:1px solid #ffb866;border-radius:4px;box-shadow:0 2px 0 #67220b;color:#fff}
+#net-games-catalog .catalog-search{display:flex;align-items:center;gap:10px;min-width:0;min-height:48px;padding:0 12px;border:1px solid #526079;border-radius:7px;background:#080d14;box-shadow:inset 0 2px 4px #0008,0 1px 0 #ffffff0b}
+#net-games-catalog .catalog-search:focus-within{border-color:#ff963e;outline:2px solid #ff963e25}
+#net-games-catalog .catalog-search svg{flex:none;color:#a4afc1;width:20px;height:20px}
+#net-games-catalog #catalog-search{width:100%;min-width:0;border:0;outline:0;padding:12px 0;font:16px Arial,sans-serif;color:#f5f7fa;background:none;box-shadow:none;min-height:46px}
+#net-games-catalog #catalog-search::placeholder{color:#8e99ad}
+#net-games-catalog .catalog-clear{border:0;background:none;color:#b7c0cf;width:28px;min-height:40px;cursor:pointer;font:22px Arial;padding:0;box-shadow:none}
+#net-games-catalog .catalog-latest{display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:#f5f7fb;font-family:Arial,sans-serif;min-width:0}
+#net-games-catalog .catalog-latest-cover{width:64px;height:64px;flex:none;border:2px solid #080b10;border-radius:8px;box-shadow:0 0 0 1px #5b6475}
+#net-games-catalog .catalog-latest-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+#net-games-catalog .catalog-latest-tag{font-size:9px;font-weight:800;color:#fff0da;align-self:flex-start;letter-spacing:.6px;padding:3px 5px;background:#a74416;border:1px solid #e97832;border-radius:3px}
+#net-games-catalog .catalog-latest strong{font-size:14px;line-height:1.2}
+#net-games-catalog .catalog-latest small{font-size:11px;color:#9eabc0;line-height:1.3}
+#net-games-catalog .catalog-categories{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:#080c12;border:1px solid #424b5a;border-bottom-color:#06090e;box-shadow:0 2px 0 #06090e,inset 0 1px 0 #ffffff15;border-radius:7px;overflow:hidden}
+#net-games-catalog .catalog-tab{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:48px;padding:9px 5px;border:0;border-top:1px solid #ffffff0d;border-bottom:3px solid transparent;border-radius:0;background:linear-gradient(#2b3340,#1c232e);color:#c7d0de;cursor:pointer;font:bold 13px Arial,sans-serif;white-space:nowrap}
+#net-games-catalog .catalog-tab span:first-child{font-size:19px}
+#net-games-catalog .catalog-tab:hover{background:linear-gradient(#374151,#262e3b);color:#fff}
+#net-games-catalog .catalog-tab[aria-pressed=true]{color:#ffb15e;border-bottom-color:#ff892e;background:linear-gradient(#36313a,#26232d)}
+#net-games-catalog .catalog-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:18px}
+#net-games-catalog .catalog-heading h2{margin:0;color:#f3f5fa;font-size:19px;font-weight:800;letter-spacing:-.3px}
+#net-games-catalog #catalog-count{font-size:12px;color:#9ba8bc;white-space:nowrap}
+#net-games-catalog .catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:25px 20px}
+#net-games-catalog .catalog-game{display:flex;flex-direction:column;align-items:stretch;gap:0;min-width:0;border:0;padding:0;background:none;color:#e7edf7;text-decoration:none;cursor:pointer;text-align:center;font-family:Arial,sans-serif;touch-action:manipulation;border-radius:8px;box-shadow:none}
+#net-games-catalog .catalog-game[hidden],#net-games-catalog [hidden]{display:none!important}
+#net-games-catalog .catalog-cover{display:block;position:relative;aspect-ratio:1;background-image:url('/portal/arcade-covers.png');background-size:400% 200%;background-repeat:no-repeat;background-color:#273142;border-radius:10px;border:3px solid #080b10;box-shadow:0 0 0 1px #505b6c,0 4px 5px #0007,inset 0 0 0 1px #ffffff1a;transition:border-color .15s,box-shadow .15s}
+#net-games-catalog .catalog-game:hover .catalog-cover{border-color:#e78636;box-shadow:0 0 0 1px #ffc57f,0 4px 8px #0009}
+#net-games-catalog .catalog-cover-racer{background-position:0 0}
+#net-games-catalog .catalog-cover-bomberman{background-position:33.333333% 0}
+#net-games-catalog .catalog-cover-invaders{background-position:66.666667% 0}
+#net-games-catalog .catalog-cover-pinball{background-position:100% 0}
+#net-games-catalog .catalog-cover-snake{background-position:0 100%}
+#net-games-catalog .catalog-cover-bricks{background-position:33.333333% 100%}
+#net-games-catalog .catalog-cover-pong{background-position:66.666667% 100%}
+#net-games-catalog .catalog-cover-yuri{background-position:100% 100%}
+#net-games-catalog .catalog-badge{position:absolute;top:8px;left:7px;border:1px solid #ffce81;border-radius:3px;padding:3px 5px;background:linear-gradient(#ffac38,#e8681e);box-shadow:0 1px 2px #0008;color:#241106;font-size:9px;font-weight:900;letter-spacing:.3px}
+#net-games-catalog .catalog-badge-external{background:#25202bdc;color:#eee0ff;border-color:#9475bd;left:auto;right:7px}
+#net-games-catalog .catalog-game-name{font-size:15px;font-weight:bold;line-height:1.25;margin-top:10px;color:#e9edf6}
+#net-games-catalog .catalog-game-kind{font-size:11px;color:#95a3b9;line-height:1.4;margin-top:4px}
+#net-games-catalog .catalog-empty{padding:32px 16px;text-align:center;background:#191f29;border:1px solid #354052;border-radius:6px;color:#aebbd0;line-height:1.6}
+#net-games-catalog .catalog-empty strong{display:block;color:#fff;margin-bottom:5px;font-size:17px}
+#net-games-catalog .catalog-reset{margin-top:14px;min-height:44px;padding:8px 16px;border:1px solid #ffac67;border-radius:5px;background:#b94a18;color:white;font-weight:bold;cursor:pointer}
+#net-games-catalog .catalog-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:18px;margin-top:auto;border-top:1px solid #303947;color:#8290a5;font-size:11px;line-height:1.5}
+#net-games-catalog .catalog-online{display:inline-flex;align-items:center;gap:6px;color:#aab8c9}
+#net-games-catalog .catalog-online::before{content:'';width:6px;height:6px;border-radius:50%;background:#8cbd78}
+#net-games-catalog button:focus-visible,#net-games-catalog a:focus-visible{outline:2px solid #ffad59;outline-offset:4px}
+#net-games-catalog button.is-pressed{filter:brightness(.85)}
+@container arcade (max-width:760px){#net-games-catalog .catalog-masthead{grid-template-columns:1fr 1fr;gap:18px}#net-games-catalog .catalog-search{grid-column:1/-1;grid-row:2}#net-games-catalog .catalog-latest{justify-self:end}#net-games-catalog .catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#net-games-catalog .catalog-tab{font-size:12px;gap:5px}#net-games-catalog .catalog-tab span:first-child{font-size:16px}}
+@container arcade (max-width:520px){#net-games-catalog .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}#net-games-catalog .catalog-categories{grid-template-columns:repeat(3,minmax(0,1fr))}#net-games-catalog .catalog-tab{min-height:45px;font-size:12px}#net-games-catalog .catalog-brand-main{font-size:37px}#net-games-catalog .catalog-brand-sub{font-size:18px;letter-spacing:.7px}#net-games-catalog .catalog-latest-cover{width:46px;height:46px}#net-games-catalog .catalog-latest small{display:none}#net-games-catalog .catalog-latest strong{font-size:12px}#net-games-catalog .catalog-latest-tag{font-size:8px;letter-spacing:0}#net-games-catalog .catalog-masthead{gap:17px 12px}#net-games-catalog .catalog-heading h2{font-size:17px}#net-games-catalog .catalog-game-name{font-size:14px}#net-games-catalog .catalog-footer{font-size:10px}}
+@media(max-width:600px){body #net-games-catalog.catalog-shell,body.mode-mobile #net-games-catalog.catalog-shell{padding:20px 16px 28px;gap:22px}}
+@media(prefers-reduced-motion:reduce){#net-games-catalog .catalog-cover{transition:none}}
+
   </style>
   <style>
     @keyframes slideUpWidget {
@@ -6302,186 +6360,50 @@
         <div class="net-browser-viewport" id="net-browser-viewport">
           
           <!-- VISTA 1: Catálogo de Juegos (JuegosFuckYeah) -->
-          <div class="jfy-portal" id="net-games-catalog">
-            <div class="jfy-banner">
-              <div class="jfy-title">JuegosFuckYeah</div>
-              <div class="jfy-subtitle">★ PORTAL RETRO DE MINIJUEGOS ARCADE ★</div>
-              <div class="jfy-meta-strip">
-                <span>CONEXIÓN: DIAL-UP 56.6K</span>
-                <span>VISITAS: 0074219</span>
-                <span>RESOLUCIÓN: 800x600</span>
-                <span>ESTADO: SERVIDOR ACTIVO</span>
-              </div>
-            </div>
-
-            <!-- Destacados: PONG y C&C Yuri's Revenge -->
-            <div class="jfy-featured-container">
-              <!-- Tarjeta PONG -->
-              <div class="jfy-featured-card" onclick="launchPongGame()" title="Haz clic aquí para jugar a PONG" style="flex-direction: row;">
-                <div class="jfy-pong-left-col">
-                  <!-- Ícono de Pong animado pixelado -->
-                  <div class="jfy-pong-icon-display" aria-label="Ícono de Pong">
-                    <div class="jfy-pong-icon-paddle-left"></div>
-                    <div class="jfy-pong-icon-net"></div>
-                    <div class="jfy-pong-icon-ball"></div>
-                    <div class="jfy-pong-icon-paddle-right"></div>
-                  </div>
-
-                  <div class="jfy-pong-info">
-                    <div class="jfy-pong-title" style="font-size: 18px;">
-                      <span>PONG</span>
-                      <span class="jfy-pong-badge">JUGABLE</span>
-                    </div>
-                    <div class="jfy-pong-desc">
-                      Pong po :D
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <button class="jfy-play-btn" type="button" onclick="event.stopPropagation(); launchPongGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <!-- Tarjeta C&C Yuri's Revenge -->
-              <div class="jfy-featured-card" id="yuri-game-card" role="link" tabindex="0" onclick="launchCnCGame(event)" onkeydown="if (event.target === this && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); launchCnCGame(event); }" title="Abrir Command &amp; Conquer: Yuri's Revenge en Retro Online" style="flex-direction: row; border-color: #cc66ff; box-shadow: 0 0 16px rgba(204, 102, 255, 0.25), inset 0 0 10px rgba(204, 102, 255, 0.1);">
-                <div class="jfy-pong-left-col">
-                  <!-- Ícono estático/texto para C&C -->
-                  <div class="jfy-pong-icon-display" aria-label="Yuri's Revenge" style="border-color: #cc66ff; display: flex; align-items: center; justify-content: center; background: #220033; color: #cc66ff; font-family: Impact, sans-serif; font-size: 20px;">
-                    YURI
-                  </div>
-
-                  <div class="jfy-pong-info">
-                    <div class="jfy-pong-title" style="font-size: 18px; color: #cc66ff; text-shadow: 0 0 6px rgba(204, 102, 255, 0.8);">
-                      <span>YURI'S REVENGE</span>
-                      <span class="jfy-pong-badge" style="background: #660099;">EXTERNO</span>
-                    </div>
-                    <div class="jfy-pong-desc" style="color: #ccc;">
-                      Command &amp; Conquer &bull; Retro Online &bull; Abre en una nueva pestaña.
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <button class="jfy-play-btn" type="button" onclick="launchCnCGame(event);" title="Jugar Yuri's Revenge en Retro Online" style="background: #440066; border-color: #dd99ff #220033 #220033 #dd99ff;">
-                    ▶ JUGAR YURI
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Catálogo de otros juegos retro simples -->
-            <div class="jfy-games-list-title">
-              <span>🕹️</span>
-              <span>CATÁLOGO DE JUEGOS RETRO DISPONIBLES Y PRÓXIMOS</span>
-            </div>
-
-            <div class="jfy-games-grid">
-              <div class="jfy-game-card playable" onclick="launchBrickBreakerGame()" title="Haz clic aquí para jugar a Brick Breaker">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">🧱</span>
-                  <span style="color: #00ff66;">BRICK BREAKER</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Arkanoid, Breakout o como ledigauteoiga
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchBrickBreakerGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <div class="jfy-game-card playable" onclick="launchSpaceInvadersGame()" title="Haz clic aquí para jugar a Space Invaders">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">👾</span>
-                  <span style="color: #00ff66;">SPACE INVADERS</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Defiende la tierra de las oleadas extraterrestres con arsenal y poderes especiales.
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchSpaceInvadersGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <!-- 3D Space Cadet Pinball (Reemplazo de Tetris 95) -->
-              <div class="jfy-game-card playable" onclick="launchPinballGame()" title="Haz clic aquí para jugar a 3D Space Cadet Pinball">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">🚀</span>
-                  <span style="color: #00ff66;">PINBALL 3D</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Space Cadet Pinball clásico de Windows. Rampas, hyperspace, resortes y física arcade.
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchPinballGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <!-- Retro Racer (Open Source Canvas Arcade) -->
-              <div class="jfy-game-card playable" onclick="launchRetroRacerGame()" title="Haz clic aquí para jugar a Retro Racer">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">🏎️</span>
-                  <span style="color: #00ff66;">RETRO RACER</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Retro Racer: curvas, elevaciones y saltos, más autos, disparos y nitro recargable.
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchRetroRacerGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <!-- Bomberman (Reemplazo de Buscaminas) -->
-              <div class="jfy-game-card playable" onclick="launchBombermanGame()" title="Haz clic aquí para jugar a Bomberman">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">💣</span>
-                  <span style="color: #00ff66;">BOMBERMAN</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Arcade de 8 bits: sprites pixelados, laberintos, bombas y poderes clásicos.
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchBombermanGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-
-              <!-- Snake -->
-              <div class="jfy-game-card playable" onclick="launchSnakeGame()" title="Haz clic aquí para jugar a Snake">
-                <div class="jfy-game-card-header">
-                  <span class="jfy-game-card-icon">🐍</span>
-                  <span style="color: #00ff66;">SNAKE</span>
-                </div>
-                <div class="jfy-game-card-desc">
-                  Pantalla LCD clásica. Come, crece y supera tu récord; pausa cuando quieras.
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px;">
-                  <span class="jfy-game-card-status" style="color: #00ff66;">[ JUGABLE AHORA ]</span>
-                  <button class="jfy-card-mini-btn" type="button" onclick="event.stopPropagation(); launchSnakeGame();">
-                    ▶ JUGAR
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="jfy-footer">
-              © 1995-1997 JuegosFuckYeah Network Corporation. Optimizado para resolución 800x600 y 1024x768.
-            </div>
-          </div>
+          <div class="catalog-shell" id="net-games-catalog">
+<header class="catalog-masthead">
+ <button class="catalog-brand" id="catalog-brand" type="button" aria-label="JuegosFuckYeah, mostrar todos los juegos"><span class="catalog-brand-main">JUEGOS</span><span class="catalog-brand-sub"><span class="catalog-brand-play" aria-hidden="true">▶</span>FUCKYEAH</span></button>
+ <div class="catalog-search" role="search"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="catalog-search" type="search" placeholder="Busca tu próximo juego…" aria-label="Buscar juegos" autocomplete="off" spellcheck="false"><button id="catalog-clear" class="catalog-clear" type="button" aria-label="Borrar búsqueda" hidden>×</button></div>
+ <button class="catalog-latest" type="button" onclick="launchRetroRacerGame()" aria-label="Jugar Retro Racer, actualizado con saltos"><span class="catalog-cover catalog-cover-racer catalog-latest-cover" aria-hidden="true"></span><span class="catalog-latest-copy"><span class="catalog-latest-tag">ACTUALIZADO</span><strong>Retro Racer</strong><small>Nuevos sprites y saltos</small></span></button>
+</header>
+<nav class="catalog-categories" aria-label="Categorías de juegos"><button class="catalog-tab" type="button" data-category="all" aria-pressed="true"><span aria-hidden="true">✦</span><span>Todos</span></button><button class="catalog-tab" type="button" data-category="action" aria-pressed="false"><span aria-hidden="true">💥</span><span>Acción</span></button><button class="catalog-tab" type="button" data-category="arcade" aria-pressed="false"><span aria-hidden="true">🕹</span><span>Arcade</span></button><button class="catalog-tab" type="button" data-category="racing" aria-pressed="false"><span aria-hidden="true">🏁</span><span>Carreras</span></button><button class="catalog-tab" type="button" data-category="strategy" aria-pressed="false"><span aria-hidden="true">♟</span><span>Estrategia</span></button><button class="catalog-tab" type="button" data-category="two" aria-pressed="false"><span aria-hidden="true">👥</span><span>2 jugadores</span></button></nav>
+<section aria-labelledby="catalog-heading"><div class="catalog-heading"><h2 id="catalog-heading">Todos los juegos</h2><span id="catalog-count" aria-live="polite" aria-atomic="true">8 juegos</span></div>
+<div class="catalog-grid"><button type="button" class="catalog-game" data-categories="racing arcade" data-search="retro racer carreras outrun autos nitro saltos" onclick="launchRetroRacerGame()" aria-label="Jugar Retro Racer">
+ <span class="catalog-cover catalog-cover-racer" aria-hidden="true"><span class="catalog-badge ">MEJORADO</span></span>
+ <span class="catalog-game-name">Retro Racer</span><span class="catalog-game-kind">Carreras · Nitro y saltos</span>
+</button>
+<button type="button" class="catalog-game" data-categories="action arcade" data-search="bomberman bombas enemigos laberinto" onclick="launchBombermanGame()" aria-label="Jugar Bomberman">
+ <span class="catalog-cover catalog-cover-bomberman" aria-hidden="true"></span>
+ <span class="catalog-game-name">Bomberman</span><span class="catalog-game-kind">Acción · Laberintos y bombas</span>
+</button>
+<button type="button" class="catalog-game" data-categories="action arcade" data-search="space invaders espacio naves disparos aliens" onclick="launchSpaceInvadersGame()" aria-label="Jugar Space Invaders">
+ <span class="catalog-cover catalog-cover-invaders" aria-hidden="true"></span>
+ <span class="catalog-game-name">Space Invaders</span><span class="catalog-game-kind">Acción · Defiende la Tierra</span>
+</button>
+<button type="button" class="catalog-game" data-categories="arcade" data-search="pinball 3d space cadet flipper" onclick="launchPinballGame()" aria-label="Jugar Pinball 3D">
+ <span class="catalog-cover catalog-cover-pinball" aria-hidden="true"></span>
+ <span class="catalog-game-name">Pinball 3D</span><span class="catalog-game-kind">Arcade · Space Cadet</span>
+</button>
+<button type="button" class="catalog-game" data-categories="arcade" data-search="snake lcd serpiente culebra nokia" onclick="launchSnakeGame()" aria-label="Jugar Snake LCD">
+ <span class="catalog-cover catalog-cover-snake" aria-hidden="true"></span>
+ <span class="catalog-game-name">Snake LCD</span><span class="catalog-game-kind">Arcade · Supera tu récord</span>
+</button>
+<button type="button" class="catalog-game" data-categories="arcade action" data-search="brick breaker arkanoid breakout bloques ladrillos" onclick="launchBrickBreakerGame()" aria-label="Jugar Brick Breaker">
+ <span class="catalog-cover catalog-cover-bricks" aria-hidden="true"></span>
+ <span class="catalog-game-name">Brick Breaker</span><span class="catalog-game-kind">Arcade · Rompe los bloques</span>
+</button>
+<button type="button" class="catalog-game" data-categories="arcade two" data-search="pong tenis ping pong dos jugadores cpu" onclick="launchPongGame()" aria-label="Jugar Pong">
+ <span class="catalog-cover catalog-cover-pong" aria-hidden="true"></span>
+ <span class="catalog-game-name">Pong</span><span class="catalog-game-kind">Clásicos · 1 o 2 jugadores</span>
+</button>
+<a id="yuri-game-card" href="https://retroonline.net/Windows/Command%20%26%20Conquer%3A%20Yuri%27s%20Revenge" target="_blank" rel="noopener noreferrer" class="catalog-game" data-categories="strategy" data-search="yuri revenge command conquer cnc estrategia tanques" onclick="launchCnCGame(event)" aria-label="Jugar Yuri's Revenge (abre en otra pestaña)">
+ <span class="catalog-cover catalog-cover-yuri" aria-hidden="true"><span class="catalog-badge catalog-badge-external">EXTERNO ↗</span></span>
+ <span class="catalog-game-name">Yuri's Revenge</span><span class="catalog-game-kind">Estrategia · Retro Online ↗</span>
+</a></div>
+<div id="catalog-empty" class="catalog-empty" hidden><strong>No encontramos ese juego</strong>Prueba otro nombre o explora todas las categorías.<br><button type="button" id="catalog-reset" class="catalog-reset">Ver todos los juegos</button></div>
+</section>
+<footer class="catalog-footer"><span>JuegosFuckYeah · Un clásico más, una partida más.</span><span class="catalog-online">Para PC y celular</span></footer>
+</div>
 
           <!-- VISTA 2: Juego Pong (HTML5 Canvas exacto de Straker Pong) -->
           <div id="net-game-pong-view">
@@ -10214,6 +10136,58 @@
       // Basado en el motor Pong de Straker (HTML5 Canvas)
       // ==========================================================
       const netGamesCatalog = document.getElementById('net-games-catalog');
+      // Portal arcade oscuro: búsqueda y categorías sin alterar los motores de juego.
+      function initializeArcadeCatalog(root) {
+        if (!root) return;
+        const search = root.querySelector('#catalog-search');
+        const clear = root.querySelector('#catalog-clear');
+        const count = root.querySelector('#catalog-count');
+        const heading = root.querySelector('#catalog-heading');
+        const empty = root.querySelector('#catalog-empty');
+        const tabs = Array.from(root.querySelectorAll('[data-category]'));
+        const cards = Array.from(root.querySelectorAll('.catalog-game'));
+        if (!search || !clear || !count || !heading || !empty) return;
+        let category = 'all';
+        const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        function render() {
+          const words = normalize(search.value).split(/\s+/).filter(Boolean);
+          let shown = 0;
+          for (const card of cards) {
+            const matchesCategory = category === 'all' || card.dataset.categories.split(' ').includes(category);
+            const text = normalize(card.dataset.search + ' ' + card.textContent);
+            card.hidden = !matchesCategory || !words.every(word => text.includes(word));
+            if (!card.hidden) shown++;
+          }
+          for (const tab of tabs) tab.setAttribute('aria-pressed', String(tab.dataset.category === category));
+          count.textContent = shown + (shown === 1 ? ' juego' : ' juegos');
+          empty.hidden = shown !== 0;
+          clear.hidden = !search.value;
+          const selected = tabs.find(tab => tab.dataset.category === category);
+          heading.textContent = words.length ? 'Resultados de búsqueda' : category === 'all'
+            ? 'Todos los juegos' : selected.querySelector('span:last-child').textContent;
+        }
+        function reset() { category = 'all'; search.value = ''; render(); }
+        search.addEventListener('input', render);
+        search.addEventListener('keydown', event => { if (event.key === 'Escape') { search.value = ''; render(); } });
+        clear.addEventListener('click', () => { search.value = ''; render(); search.focus(); });
+        for (const tab of tabs) tab.addEventListener('click', () => { category = tab.dataset.category; render(); });
+        root.querySelector('#catalog-brand').addEventListener('click', reset);
+        root.querySelector('#catalog-reset').addEventListener('click', reset);
+        for (const control of root.querySelectorAll('button, a')) {
+          const release = () => control.classList.remove('is-pressed');
+          control.addEventListener('touchstart', () => control.classList.add('is-pressed'), { passive: true });
+          control.addEventListener('touchend', release, { passive: true });
+          control.addEventListener('touchcancel', release, { passive: true });
+          control.addEventListener('touchmove', release, { passive: true });
+          control.addEventListener('mousedown', () => control.classList.add('is-pressed'));
+          control.addEventListener('mouseup', release);
+          control.addEventListener('mouseleave', release);
+          control.addEventListener('blur', release);
+        }
+        render();
+      }
+      initializeArcadeCatalog(netGamesCatalog);
+
       const netGamePongView = document.getElementById('net-game-pong-view');
       const netGamePinballView = document.getElementById('net-game-pinball-view');
       const netGameCnCView = document.getElementById('net-game-cnc-view');
@@ -10834,6 +10808,7 @@
 
       window.launchCnCGame = function (e) {
         if (e) {
+          e.preventDefault();
           e.stopPropagation();
         }
         window.open(CNC_URL, '_blank', 'noopener,noreferrer');
