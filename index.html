@@ -15831,6 +15831,7 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
           const target = e.target;
           if (target?.isContentEditable || target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
           if (bootScreen && !bootScreen.classList.contains('hidden')) return;
+          if (activeWindowId && activeWindowId !== 'window-grimoire') return;
           e.preventDefault();
           e.stopImmediatePropagation();
           triggerGrimoire(e);
