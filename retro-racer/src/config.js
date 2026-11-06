@@ -1,5 +1,5 @@
 // Adapted from simondiep/retro-racer (07d6a46), using metres and seconds.
-export const LANES = 3;
+export const LANES = 5;
 export const RUMBLE_LENGTH = 2;
 export const SEGMENT_LENGTH = 5;
 export const TOTAL_SEGMENTS = 1100;

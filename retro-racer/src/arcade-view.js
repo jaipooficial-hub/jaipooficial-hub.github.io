@@ -51,7 +51,7 @@ export function drawRace(ctx,s,best) {
     quad(ctx,'#c3ad77',far,near,-1.24,1.24);
     quad(ctx,segment.rumbleColor,far,near,-1.14,1.14);
     quad(ctx,segment.roadColor,far,near,-1,1);
-    if(segment.showLaneStripe)for(const lane of [-1/3,1/3])quad(ctx,'#fff',far,near,lane-.012,lane+.012);
+    if(segment.showLaneStripe)for(const lane of [-0.6,-0.2,0.2,0.6])quad(ctx,'#fff',far,near,lane-.008,lane+.008);
     drawGroundDetail(ctx,s,segment,project);
     ctx.restore();
   }

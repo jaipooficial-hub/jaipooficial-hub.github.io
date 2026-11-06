@@ -1,9 +1,9 @@
-import { MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js';
+import { LANES as LANE_COUNT, MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js';
 import { elevationAt, carTurn } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;
 export const CHECKPOINTS = [1600, 3200];
-const LANES = [-0.64, 0, 0.64];
+const TRAFFIC_LANES = [-0.8, -0.4, 0, 0.4, 0.8];
 export function createRace(random = Math.random) {
   return { phase: 'ready', resumePhase: 'racing', countdown: 1, speed: 0, x: 0,
     distance: 0, timeLeft: 65, elapsed: 0, sector: 0, overtakes: 0, hits: 0,
@@ -11,7 +11,7 @@ export function createRace(random = Math.random) {
     shotCooldown: 0, bullets: [], effects: [], visualTurn: 0,
     y: 0, verticalSpeed: 0, airHeight: 0, airborne: false, landingTime: 0, jumps: 0,
     traffic: Array.from({ length: 30 }, (_, i) => ({ z: 80 + i * 52,
-      x: LANES[i % 3], speed: 24 + random() * 12, color: i % TRAFFIC_COLORS.length, passed: false, destroyed: false })) };
+      x: TRAFFIC_LANES[i % LANE_COUNT], speed: 24 + random() * 12, color: i % TRAFFIC_COLORS.length, passed: false, destroyed: false })) };
 }
 export function startRace(s) { if (s.phase === 'ready') s.phase = 'countdown'; }
 export function pauseRace(s) {
@@ -129,7 +129,7 @@ export function stepRace(s, input, dt, random = Math.random) {
     if (gap < -80) {
       // Append behind the final car instead of stacking a new three-car wall.
       car.z = Math.max(s.distance + 600, ...s.traffic.map(other => other.z)) + 36 + random() * 24;
-      car.x = LANES[Math.floor(random() * 3)]; car.speed = 24 + random() * 12;
+      car.x = TRAFFIC_LANES[Math.floor(random() * LANE_COUNT)]; car.speed = 24 + random() * 12;
       car.passed = false; car.destroyed = false;
     }
   }
