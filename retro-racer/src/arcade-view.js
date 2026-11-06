@@ -1,5 +1,5 @@
 import { RACE_LENGTH } from './race-model.js';
-import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js';
+import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js?v=lanes5';
 import { createRoadSegments, convertZPositionRoadTo2dCoords, roadAt } from './road.js';
 import { drawShape } from './canvas-view.js';
 import { loadCarSheet, drawCarSprite, playerSprite } from './car-sprites.js';
@@ -51,7 +51,7 @@ export function drawRace(ctx,s,best) {
     quad(ctx,'#c3ad77',far,near,-1.24,1.24);
     quad(ctx,segment.rumbleColor,far,near,-1.14,1.14);
     quad(ctx,segment.roadColor,far,near,-1,1);
-    if(segment.showLaneStripe)for(const lane of [-0.6,-0.2,0.2,0.6])quad(ctx,'#fff',far,near,lane-.008,lane+.008);
+    if(segment.showLaneStripe)for(const lane of [-0.6,-0.2,0.2,0.6])quad(ctx,'#f4edcf',far,near,lane-.014,lane+.014);
     drawGroundDetail(ctx,s,segment,project);
     ctx.restore();
   }

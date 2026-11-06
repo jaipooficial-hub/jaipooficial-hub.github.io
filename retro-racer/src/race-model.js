@@ -1,4 +1,4 @@
-import { LANES as LANE_COUNT, MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js';
+import { LANES as LANE_COUNT, MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js?v=lanes5';
 import { elevationAt, carTurn } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;

@@ -1,6 +1,6 @@
-import { createRace, startRace, pauseRace, activateNitro, stepRace } from './race-model.js';
+import { createRace, startRace, pauseRace, activateNitro, stepRace } from './race-model.js?v=lanes5';
 import { input, bindControls, clearInput } from './arcade-controls.js';
-import { drawRace, loadCarSprites } from './arcade-view.js';
+import { drawRace, loadCarSprites } from './arcade-view.js?v=lanes5';
 const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
 const audio = document.getElementById('music-background');
 let state = createRace(), lastTime = 0, accumulator = 0, best = 0, assetsReady = false, assetError = '';
