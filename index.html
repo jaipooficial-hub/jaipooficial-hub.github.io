@@ -534,10 +534,10 @@
       transform: translateY(-6px);
     }
 
-    /* Icono Secreto Grimorio (Easter Egg en la esquina inferior derecha del wallpaper) */
+    /* El grimorio aparece debajo del extremo derecho de la imagen AXBYZ. */
     #icon-grimoire {
       position: absolute !important;
-      bottom: 4px !important;
+      bottom: -34px !important;
       right: 4px !important;
       width: 36px !important;
       height: 36px !important;
@@ -5971,7 +5971,7 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
     <div id="desktop-brand-center">
       <div class="brand-logo" id="brand-logo-img" style="position: relative; display: inline-block;">
         <img src="/assets/logo-CIykx6VS.png" alt="Retro OS Logo" style="width: 100%; height: 100%; object-fit: contain; display: block;" />
-        <div id="secret-z-trigger" style="position: absolute; top: -5%; left: 65%; width: 12%; height: 110%; pointer-events: auto; cursor: pointer; z-index: 9999;" title="Z"></div>
+        <div id="secret-z-trigger" role="button" aria-label="Descubrir el grimorio con Z" title="Z · Descubrir el grimorio" style="position: absolute; top: -5%; left: 65%; width: 12%; height: 110%; pointer-events: auto; cursor: pointer; z-index: 9999;"></div>
       </div>
       <div class="brand-wallpaper" id="brand-wallpaper-img" style="position: relative; display: inline-block;">
         <img src="/assets/AXBYZ-CtoAASzJ.png" alt="Retro Desktop Wallpaper" style="width: 100%; height: 100%; object-fit: contain; display: block;" />
@@ -15822,6 +15822,19 @@ body #net-games-catalog.catalog-shell{box-sizing:border-box;display:flex;flex-di
 
         secretZTrigger.addEventListener('click', triggerGrimoire);
         secretZTrigger.addEventListener('touchend', triggerGrimoire);
+
+        // Z works as the same secret on keyboard and on the marked logo area.
+        // Leave editable fields usable; otherwise the shortcut reveals the icon
+        // on both PC and mobile keyboard layouts without repeating while held.
+        document.addEventListener('keydown', function(e) {
+          if (e.repeat || (e.code !== 'KeyZ' && String(e.key).toLowerCase() !== 'z')) return;
+          const target = e.target;
+          if (target?.isContentEditable || target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+          if (bootScreen && !bootScreen.classList.contains('hidden')) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          triggerGrimoire(e);
+        }, true);
 
         iconGrimoire.addEventListener('click', function(e) {
           e.stopPropagation();
