@@ -1,14 +1,18 @@
-import { LANES as LANE_COUNT, MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js?v=lanes5';
+import { LANES as LANE_COUNT, MAX_SPEED, NITRO_MAX_SPEED, TRAFFIC_COLORS } from './config.js?v=ammo1';
 import { elevationAt, carTurn } from './road.js';
 export { MAX_SPEED } from './config.js';
 export const RACE_LENGTH = 4800;
 export const CHECKPOINTS = [1600, 3200];
+export const MAX_AMMO = 40;
+export const AMMO_PER_CRATE = 5;
 const TRAFFIC_LANES = [-0.8, -0.4, 0, 0.4, 0.8];
 export function createRace(random = Math.random) {
   return { phase: 'ready', resumePhase: 'racing', countdown: 1, speed: 0, x: 0,
     distance: 0, timeLeft: 65, elapsed: 0, sector: 0, overtakes: 0, hits: 0,
-    nitro: 0, nitroCharge: 100, hitCooldown: 0, flash: 0, message: '', messageTime: 0,
-    shotCooldown: 0, bullets: [], effects: [], visualTurn: 0,
+    nitro: 0, nitroCharge: 100, ammo: 20, hitCooldown: 0, flash: 0, message: '', messageTime: 0,
+    shotCooldown: 0, bullets: [], effects: [], ammoCrates: Array.from({ length: 27 }, (_, i) => ({
+      z: 160 + i * 175, x: TRAFFIC_LANES[(i * 2 + 1) % LANE_COUNT], collected: false
+    })), visualTurn: 0,
     y: 0, verticalSpeed: 0, airHeight: 0, airborne: false, landingTime: 0, jumps: 0,
     traffic: Array.from({ length: 30 }, (_, i) => ({ z: 80 + i * 52,
       x: TRAFFIC_LANES[i % LANE_COUNT], speed: 24 + random() * 12, color: i % TRAFFIC_COLORS.length, passed: false, destroyed: false })) };
@@ -19,12 +23,19 @@ export function pauseRace(s) {
   else if (['racing', 'countdown'].includes(s.phase)) { s.resumePhase = s.phase; s.phase = 'paused'; }
 }
 export function activateNitro(s) {
-  if (s.phase !== 'racing' || s.nitro > 0 || s.nitroCharge < 100) return false;
-  s.nitro = 3; return true;
+  if (s.phase !== 'racing' || s.nitro > 0 || s.nitroCharge <= 0) return false;
+  s.nitro = 3 * s.nitroCharge / 100;
+  s.nitroCharge = 0;
+  return true;
 }
 export function fireShot(s) {
   if (s.phase !== 'racing' || s.shotCooldown > 0) return false;
+  if (s.ammo <= 0) {
+    if (s.messageTime <= 0) { s.message = 'SIN BALAS'; s.messageTime = .7; }
+    return false;
+  }
   s.shotCooldown = 0.24;
+  s.ammo--;
   s.bullets.push({ z: s.distance + 3, x: s.x, speed: s.speed + 180, life: 1.6, height: s.airHeight + .6 });
   return true;
 }
@@ -67,10 +78,6 @@ export function stepRace(s, input, dt, random = Math.random) {
   if (s.nitro > 0) {
     s.nitro = Math.max(0, s.nitro - dt);
     if (s.nitro < 1e-8) s.nitro = 0;
-    s.nitroCharge = s.nitro / 3 * 100;
-  } else {
-    s.nitroCharge = Math.min(100, s.nitroCharge + 12.5 * dt);
-    if (s.nitroCharge > 100 - 1e-8) s.nitroCharge = 100;
   }
   const boost = s.nitro > 0;
   const boostMomentum = !boost && s.speed > MAX_SPEED;
@@ -114,10 +121,21 @@ export function stepRace(s, input, dt, random = Math.random) {
     }
     if (target) {
       target.destroyed = true; bullet.life = 0; s.hits++;
+      s.nitroCharge = Math.min(100, s.nitroCharge + 10);
+      s.message = 'NITRO +10%'; s.messageTime = 1;
       s.effects.push({ x: target.x, z: target.z, life: 0.45 });
     }
   }
   s.bullets = s.bullets.filter(b => b.life > 0 && b.z > s.distance - 5);
+  for (const crate of s.ammoCrates) {
+    const crossed = crate.z >= previousDistance - 2 && crate.z <= s.distance + 2;
+    if (!crate.collected && s.ammo < MAX_AMMO && crossed && Math.abs(crate.x - s.x) < 0.24) {
+      crate.collected = true;
+      s.ammo = Math.min(MAX_AMMO, s.ammo + AMMO_PER_CRATE);
+      s.message = 'BALAS +5'; s.messageTime = 1;
+    }
+  }
+  s.ammoCrates = s.ammoCrates.filter(crate => !crate.collected && crate.z >= s.distance - 8);
   for (const car of s.traffic) {
     const gap = car.z - s.distance;
     const crossed = car.previousZ >= previousDistance && car.z <= s.distance;

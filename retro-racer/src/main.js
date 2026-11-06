@@ -1,6 +1,6 @@
-import { createRace, startRace, pauseRace, activateNitro, stepRace } from './race-model.js?v=lanes5';
+import { createRace, startRace, pauseRace, activateNitro, stepRace } from './race-model.js?v=ammo1';
 import { input, bindControls, clearInput } from './arcade-controls.js';
-import { drawRace, loadCarSprites } from './arcade-view.js?v=lanes5';
+import { drawRace, loadCarSprites } from './arcade-view.js?v=ammo1';
 const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
 const audio = document.getElementById('music-background');
 let state = createRace(), lastTime = 0, accumulator = 0, best = 0, assetsReady = false, assetError = '';
@@ -23,7 +23,7 @@ function pause() { pauseRace(state); clearInput(); accumulator = 0; lastTime = 0
 function suspend() { if (['racing','countdown'].includes(state.phase)) pause(); }
 function updateUI() {
   const status = document.getElementById('race-status');
-  const descriptions = { ready: assetError || (!assetsReady ? 'Cargando los sprites de los autos…' : 'Tu auto es el negro. Lomas: salta a alta velocidad. Cada sector da +18 s.'), countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'En las crestas puedes saltar a alta velocidad. C: fuego · R: nitro.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta! '+state.elapsed.toFixed(1)+' s · '+state.overtakes+' adelantamientos · '+state.hits+' blancos.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
+  const descriptions = { ready: assetError || (!assetsReady ? 'Cargando los sprites de los autos…' : '20 balas iniciales · cajas de +5 (máx. 40) · autos destruidos: +10% nitro.'), countdown: 'Preparados. Mantén ACELERAR para salir.', racing: 'Cajas doradas: +5 balas · autos destruidos: +10% nitro. R usa la carga disponible.', paused: 'Partida en pausa. Pulsa Continuar.', won: '¡Meta! '+state.elapsed.toFixed(1)+' s · '+state.overtakes+' adelantamientos · '+state.hits+' blancos.', over: 'Se acabó el tiempo. Pulsa Otra carrera.' };
   if (status.textContent !== descriptions[state.phase]) status.textContent = descriptions[state.phase];
   const startBtn = document.getElementById('btn-start');
   const startLabel = ['won','over'].includes(state.phase) ? 'Otra carrera' : state.phase === 'paused' ? 'Continuar' : state.phase === 'ready' ? 'Jugar' : 'En carrera';
@@ -32,8 +32,8 @@ function updateUI() {
   document.getElementById('btn-pause').disabled = !['racing','countdown','paused'].includes(state.phase);
   document.getElementById('btn-pause').textContent = state.phase === 'paused' ? 'Continuar' : 'Pausa';
   const nitro = document.getElementById('btn-touch-nitro');
-  nitro.disabled = state.phase !== 'racing' || state.nitro > 0 || state.nitroCharge < 100;
-  const label = state.nitro > 0 ? 'NITRO '+state.nitro.toFixed(1) : state.nitroCharge < 100 ? 'CARGA '+Math.floor(state.nitroCharge)+'%' : 'NITRO [R]';
+  nitro.disabled = state.phase !== 'racing' || state.nitro > 0 || state.nitroCharge <= 0;
+  const label = state.nitro > 0 ? 'NITRO '+state.nitro.toFixed(1)+'s' : 'NITRO '+Math.floor(state.nitroCharge)+'% [R]';
   if (nitro.textContent !== label) nitro.textContent = label;
   nitro.classList.toggle('boosting', state.nitro > 0);
 }

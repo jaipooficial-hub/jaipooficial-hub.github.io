@@ -1,5 +1,5 @@
 import { RACE_LENGTH } from './race-model.js';
-import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js?v=lanes5';
+import { SEGMENT_LENGTH, DRAW_DISTANCE, HORIZON } from './config.js?v=ammo1';
 import { createRoadSegments, convertZPositionRoadTo2dCoords, roadAt } from './road.js';
 import { drawShape } from './canvas-view.js';
 import { loadCarSheet, drawCarSprite, playerSprite } from './car-sprites.js';
@@ -66,6 +66,7 @@ export function drawRace(ctx,s,best) {
     objects.push({z:z+17,x:1.8+((Math.floor(z/34)%2)*.45),tree:true});
   }
   for(const car of s.traffic) if(!car.destroyed&&car.z>s.distance-2&&car.z<s.distance+500)objects.push(car);
+  for(const crate of s.ammoCrates) if(crate.z>s.distance-2&&crate.z<s.distance+500)objects.push({...crate,ammoCrate:true});
   for(const bullet of s.bullets) objects.push({...bullet,bullet:true});
   for(const effect of s.effects) if(effect.z>s.distance-2)objects.push({...effect,effect:true});
   objects.sort((a,b)=>b.z-a.z);
@@ -80,6 +81,14 @@ export function drawRace(ctx,s,best) {
       const w=Math.max(1,Math.round(p.w*.02)),h=Math.max(2,Math.round(p.w*.11));
       ctx.fillStyle='#ddd';ctx.fillRect(Math.round(p.x),Math.round(p.y-h),w,h);
       ctx.fillStyle='#d84838';ctx.fillRect(Math.round(p.x),Math.round(p.y-h),w,Math.ceil(h/3));
+    } else if(obj.ammoCrate) {
+      const size=Math.max(6,Math.round(p.w*.075)),h=Math.max(5,Math.round(size*.72));
+      const x=Math.round(p.x-size/2),y=Math.round(p.y-h);
+      ctx.fillStyle='#382518';ctx.fillRect(x,y,size,h);
+      ctx.fillStyle='#c98224';ctx.fillRect(x+1,y+1,size-2,h-2);
+      ctx.fillStyle='#ffe078';ctx.fillRect(x+2,y+1,Math.max(1,size-4),Math.max(1,Math.floor(h*.2)));
+      ctx.fillStyle='#70451d';ctx.fillRect(x+Math.floor(size*.46),y+1,Math.max(1,Math.floor(size*.1)),h-2);
+      ctx.fillStyle='#f8e6a0';ctx.fillRect(x+Math.floor(size*.25),y+Math.floor(h*.43),Math.max(1,Math.floor(size*.5)),Math.max(1,Math.floor(h*.18)));
     } else if(obj.bullet) {
       const w=Math.max(2,Math.round(p.w*.045)),h=Math.max(4,Math.round(p.w*.12));
       const y=p.y-p.scale*(obj.height??.6);
@@ -113,11 +122,13 @@ export function drawRace(ctx,s,best) {
   pixelText(ctx,Math.round(s.speed*3.6).toString().padStart(3,'0')+' KM/H',246,4);
   pixelText(ctx,'META '+(Math.ceil((RACE_LENGTH-s.distance)/10)/100).toFixed(2),8,15,'#72D7EE');
   pixelText(ctx,'PASES '+s.overtakes,110,15,'#72D7EE');
+  pixelText(ctx,'BALAS '+s.ammo,164,15,s.ammo<=5?'#ff7858':'#fffbbc');
   pixelText(ctx,'BLANCOS '+s.hits,220,15,'#fffbbc');
   ctx.fillStyle='#101820';ctx.fillRect(5,214,90,24);
-  pixelText(ctx,s.nitro>0?'NITRO ACTIVO':'NITRO '+Math.floor(s.nitroCharge),9,218,'#fffbbc');
+  const nitroPercent=Math.min(100,s.nitroCharge+s.nitro/3*100);
+  pixelText(ctx,s.nitro>0?'NITRO ACTIVO':'NITRO '+Math.floor(nitroPercent)+'%',9,218,'#fffbbc');
   ctx.fillStyle='#404850';ctx.fillRect(9,229,80,5);
-  ctx.fillStyle=s.nitro>0?'#ff7828':s.nitroCharge>=100?'#70e060':'#f0c030';ctx.fillRect(9,229,Math.floor(s.nitroCharge*.8),5);
+  ctx.fillStyle=s.nitro>0?'#ff7828':nitroPercent>=100?'#70e060':'#f0c030';ctx.fillRect(9,229,Math.floor(nitroPercent*.8),5);
   if(s.airHeight>.15) {
     ctx.fillStyle='#101820';ctx.fillRect(237,221,78,17);
     pixelText(ctx,'EN EL AIRE',242,226,'#fffbbc');

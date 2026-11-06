@@ -9,8 +9,10 @@ El bucle original se sustituye por una simulación fija de 60 pasos por segundo.
 ## Controles y reglas
 
 - Flechas / WASD: acelerar, frenar y cambiar de carril.
-- C / Espacio o FUEGO: mantener para disparar (munición ilimitada).
-- R / NITRO: turbo de 3 s; recarga automática completa en 8 s, con barra visible.
+- C / Espacio o FUEGO: disparar (20 balas iniciales); recoge cajas en la pista para
+  obtener 5 balas, hasta un máximo de 40.
+- R / NITRO: consume la carga disponible (100 % dura hasta 3 s); empieza al 100 %,
+  no se recarga con el tiempo y cada auto destruido devuelve 10 %.
 - P / Escape: pausa. Enter: iniciar / continuar. Reiniciar: nueva carrera.
 - Botones con pulsación sostenida, multitáctil y captura de puntero.
 - Máximo normal de 250 km/h y de 380 km/h con nitro. Aceleración de 0–250 km/h
